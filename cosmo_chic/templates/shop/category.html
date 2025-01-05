@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category | Cosmo Chic</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'cat_style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="main">
+        <h1>Add Category</h1>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="category">Category Name:</label><br>
+            <input type="text" name="category" id="cid" class="input1" placeholder="Enter category name" required><br><br>
+            <input type="submit" value="Add" class="input2"><br><br>
+        </form>
+    </div>
+</body>
+
+</html>

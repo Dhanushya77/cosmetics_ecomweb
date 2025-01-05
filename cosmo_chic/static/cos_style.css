@@ -1,0 +1,47 @@
+body{
+    background: url('bg3.jpg') no-repeat center center fixed;
+    background-size: cover;
+    
+}
+.container1{
+    color: white;
+    background-color:rgba(239, 175, 175, 0.265);
+    align-items: center;
+	justify-content: center;
+	height: 70vh;
+    width: 25% !important;
+    margin: auto;
+    border-radius: 2%;
+    margin-top: 10vh;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.368);
+    padding: 10px;
+   
+}
+.container1 h1{
+    color: white;
+    text-shadow:  0 4px 8px rgba(0, 0, 0, 0.377);
+    margin-bottom: 6vh;
+}
+.main a{
+    color: white;
+    text-decoration: underline;
+
+}
+.input{
+    padding: 10px;
+    border-radius: 10px;
+    border-style: none;
+    width: 15vw;
+}
+.input1{
+    padding: 10px;
+    border-radius: 10px;
+    border-style: none;
+    width: 6vw;
+    margin-top: 4vh;
+    margin-bottom: 1vh;
+}
+.main{
+    margin-top: 10vh;
+}

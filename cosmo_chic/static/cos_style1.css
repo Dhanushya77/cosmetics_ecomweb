@@ -1,0 +1,71 @@
+body{
+    background: url('bg3.jpg') no-repeat center center fixed;
+    background-size: cover;
+    
+}
+/* -------------------add-pro----------------------------- */
+.main h1{
+    color: white;
+    text-shadow:  0 4px 8px rgba(0,0,0,0.5);
+    margin-bottom: 4vh;
+}
+.main{
+    background-color:rgba(239, 175, 175, 0.265);
+    align-items: center;
+	justify-content: center;
+	height: 70vh;
+    width: 25% !important;
+    margin: auto;
+    border-radius: 2%;
+    margin-top: 10vh;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(18, 16, 16, 0.356);
+    padding: 10px;
+}
+.input1{
+    padding: 10px;
+    border-radius: 10px;
+    border-style: none;
+    width: 15vw;
+}
+.input2{
+    padding: 10px;
+    border-radius: 10px;
+    border-style: none;
+    width: 6vw;
+    
+}
+/* ------------------edit pro--------------------------- */
+.main1{
+    background-color:rgba(255, 255, 255, 0.247);
+    align-items: center;
+	justify-content: center;
+    width: 35%;
+    margin: auto;
+    border-radius: 2%;
+    margin-top: 10vh;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.5);
+    padding: 10px;
+}
+.main1 h1{
+    color: white;
+    text-shadow:  0 4px 8px rgba(0,0,0,0.5);
+    margin-bottom: 4vh;
+}
+.main1 img{
+    border-radius: 2%;
+}
+.input3{
+    padding: 10px;
+    border-radius: 10px;
+    border-style: none;
+    width: 15vw;
+}
+.input4{
+    padding: 10px;
+    border-radius: 10px;
+    border-style: none;
+    width: 6vw;
+    
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product | Cosmo Chic</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'add_style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="main">
+        <h1>Add Product</h1>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="pro_category">Product Categories:</label><br>
+            <select name="category" class="drop" id="" required>
+                {% for i in data %}
+                    <option value="{{i.category}}">{{i.category}}</option>
+                {% endfor %}
+            </select><br><br>
+            <input type="text" name="pid" id="" class="input1" placeholder="Product ID" required><br><br>
+            <input type="text" name="name" id="" class="input1" placeholder="Product Name" required><br><br>
+            <input type="text" name="dis" id="" class="input1" placeholder="Product Description" required><br><br>
+            <input type="file" name="img" id="" class="input1" accept="image/*" required><br><br>
+            <input type="submit" value="Add Product" class="input2"><br><br>
+        </form>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fef2f8 !important; 
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            text-align: center;
+            color: #b3374c;
+            margin-bottom: 30px;
+        }
+
+        .form-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container input,
+        .form-container select {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #b3374c !important;
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #9b2f42 !important;
+        }
+
+        .image-upload-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .image-upload-container img {
+            max-width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload-container input[type="file"] {
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .product-form-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .product-form-wrapper .col-md-6 {
+            max-width: 48%;
+            margin-bottom: 20px;
+        }
+
+      
+        @media (max-width: 768px) {
+            .product-form-wrapper .col-md-6 {
+                max-width: 100%;
+            }
+
+            .image-upload-container img {
+                height: 200px;
+            }
+        }
+  
