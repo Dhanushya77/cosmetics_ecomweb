@@ -106,7 +106,7 @@ def details(req):
         product_instance = product.objects.get(pid=pro)
         data=Details.objects.create(price=price,offer_price=offer_price,stock=stock,weight=weight,product=product_instance)
         data.save()
-        return redirect(shop_home)
+        return redirect(details)
 
     else:
         data=product.objects.all()
@@ -205,33 +205,112 @@ def user_home(req):
     else:
         return redirect(cosmetic_login)
 
-def view_details(req,id):
-    products = product.objects.filter(pk=id).first()
-    data=Details.objects.all()
-    if products:
-        details = Details.objects.filter(product=products).first()
+# def view_details(req,id):
+#     products = product.objects.filter(pk=id).first()
+#     data=Details.objects.all()
+#     if products:
+#         details = Details.objects.filter(product=products).first()
         
-        if details:
-            return render(req,'user/view_details.html',{'details':details,'data':data})
-        else:
+#         if details:
+#             return render(req,'user/view_details.html',{'details':details,'data':data})
+#         else:
             
-            return render(req,'user/view_details.html', {'message': 'No details available for this product.'})
-    else:
+#             return render(req,'user/view_details.html', {'message': 'No details available for this product.'})
+#     else:
         
-        return render(req, 'user/view_details.html', {'message': 'Product not found.'})
+#         return render(req, 'user/view_details.html', {'message': 'Product not found.'})
+
+
+
+def view_details(req, id):
+    data=Details.objects.all()
+    products = product.objects.filter(pk=id).first()
+
+   
+    if products:
+        details = Details.objects.filter(product=products)
+
+       
+        selected_detail = details.first()  
+
+   
+        selected_weight = req.GET.get('weight')
+        if selected_weight:
+            selected_detail = details.filter(weight=selected_weight).first()
+
+        if selected_detail:
+            return render(req, 'user/view_details.html', {
+                'product': products,
+                'weight_details': details,
+                'selected_detail': selected_detail,
+                'data':data,
+            })
+        else:
+         
+            return render(req, 'user/view_details.html', {
+                'message': 'No details available for this product.'
+            })
+    else:
+       
+        return render(req, 'user/view_details.html', {
+            'message': 'Product not found.'
+        })
+
+
+
+
+# def add_to_cart(req, pid):
+#     products = product.objects.filter(pk=pid).first()
+#     details = Details.objects.get(product=products)
+#     user = User.objects.get(username=req.session['user'])
+#     try:
+#         cart = Cart.objects.get(details=details, user=user)
+#         cart.quantity += 1
+#         cart.save()
+#     except:
+#         data = Cart.objects.create(details=details, user=user, quantity=1)
+#         data.save()
+#     return redirect(view_cart)
 
 def add_to_cart(req, pid):
-    products = product.objects.filter(pk=pid).first()
-    details = Details.objects.get(product=products)
+   
+    product_instance = product.objects.filter(pk=pid).first()
+
+    if not product_instance:
+        return redirect('product_not_found')
+
+    
+    details = Details.objects.filter(product=product_instance)
+    
+
+    selected_weight = req.GET.get('weight')
+    print(selected_weight)
+
+    if selected_weight:
+        selected_detail = details.filter(weight=selected_weight).first()
+    else:
+      
+        selected_detail = details.first()
+
+    if not selected_detail:
+        return render(req, 'user/view_details.html', {
+            'message': 'No details available for this product with the selected weight.'
+        })
+
+
     user = User.objects.get(username=req.session['user'])
+
     try:
-        cart = Cart.objects.get(details=details, user=user)
+        
+        cart = Cart.objects.get(details=selected_detail, user=user)
         cart.quantity += 1
         cart.save()
-    except:
-        data = Cart.objects.create(details=details, user=user, quantity=1)
-        data.save()
+
+    except Cart.DoesNotExist:
+        
+        Cart.objects.create(details=selected_detail, user=user, quantity=1)
     return redirect(view_cart)
+
 
 def view_cart(req):
     user = User.objects.get(username=req.session['user'])
@@ -292,7 +371,7 @@ def cart_buy(req):
 
     # cart_items.delete()
 
-    # return redirect(user_bookings)
+    return redirect(user_bookings)
 
 def filter_products(req):
     category=Category.objects.all()
