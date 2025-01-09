@@ -273,30 +273,22 @@ def view_details(req, id):
 #     return redirect(view_cart)
 
 def add_to_cart(req, pid):
-   
+
     product_instance = product.objects.filter(pk=pid).first()
 
     if not product_instance:
         return redirect('product_not_found')
-
-    
     details = Details.objects.filter(product=product_instance)
-    
-
     selected_weight = req.GET.get('weight')
-    print(selected_weight)
 
     if selected_weight:
-        selected_detail = details.filter(weight=selected_weight).first()
-    else:
-      
+        selected_detail = details.filter(weight=selected_weight).first()   
+    else: 
         selected_detail = details.first()
 
     if not selected_detail:
         return render(req, 'user/view_details.html', {
-            'message': 'No details available for this product with the selected weight.'
-        })
-
+            'message': 'No details available for this product with the selected weight.'})
 
     user = User.objects.get(username=req.session['user'])
 
@@ -310,6 +302,7 @@ def add_to_cart(req, pid):
         
         Cart.objects.create(details=selected_detail, user=user, quantity=1)
     return redirect(view_cart)
+    
 
 
 def view_cart(req):
@@ -334,15 +327,38 @@ def quantity_dec(req,cid):
         data.delete()
     return redirect(view_cart)
 
+# def buy_pro(req,pid):
+#     products=product.objects.filter(pk=pid).first()
+#     details=Details.objects.filter(product=products).first()
+#     user=User.objects.get(username=req.session['user'])
+#     quantity=1
+#     price=details.offer_price
+#     buy=Buy.objects.create(details=details,user=user,quantity=quantity,t_price=price)
+#     buy.save()
+#     return redirect(user_bookings)
+
+
 def buy_pro(req,pid):
-    products=product.objects.filter(pk=pid).first()
-    details=Details.objects.get(product=products)
-    user=User.objects.get(username=req.session['user'])
+    product_instance = product.objects.filter(pk=pid).first()
+    details = Details.objects.filter(product=product_instance)
+    selected_weight = req.GET.get('weight')
+    if selected_weight:
+        selected_detail = details.filter(weight=selected_weight).first()   
+    else: 
+        selected_detail = details.first()
+    if not selected_detail:
+        return render(req, 'user/view_details.html', {
+            'message': 'No details available for this product with the selected weight.'})
+
+    user = User.objects.get(username=req.session['user'])
     quantity=1
-    price=details.offer_price
-    buy=Buy.objects.create(details=details,user=user,quantity=quantity,t_price=price)
+    price=selected_detail.offer_price
+    buy = Buy.objects.create(details=selected_detail,user=user,quantity=quantity,t_price=price)
     buy.save()
     return redirect(user_bookings)
+    
+
+
 
 def user_bookings(req):
     user=User.objects.get(username=req.session['user'])

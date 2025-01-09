@@ -129,7 +129,7 @@
             <p class="card-text text-muted">{{ product.dis }}</p>
 
          
-            <div class="weight-options">
+            <div class="weight-options" id="selected_weight" name="selected_weight">
                 <p><strong>Select Weight:</strong></p>
                 {% for detail in weight_details %}
                     <a href="?weight={{ detail.weight }}" class="btn btn-outline-primary btn-sm {% if detail.weight == selected_detail.weight %} active {% endif %}" style="margin-right: 5px;">
@@ -139,15 +139,15 @@
             </div>
 
            
-            <div id="selectedPrice" style="margin-top: 20px;">
+            <div id="selected_weight" name="selected_weight" style="margin-top: 20px;">
                 <p id="priceDisplay"><strong>Price: ₹{{ selected_detail.offer_price }}</strong> <span style="text-decoration: line-through;color: red;">₹{{ selected_detail.price }}</span></p>
             </div>
 
             <div class="d-flex justify-content-left gap-3" style="margin-top: 6vh;">
-                <a href="../add_to_cart/{{ product.id }}" class="btn btn-outline-primary btn-sm">
+                <a href="../add_to_cart/{{ product.id }}?weight={{selected_detail.weight}}" class="btn btn-outline-primary btn-sm">
                     <i class="fas fa-cart-plus"></i> Add to cart
                 </a>
-                <a href="../buy_pro/{{ product.id }}" class="btn btn-outline-danger btn-sm">
+                <a href="../buy_pro/{{ product.id }}?weight={{selected_detail.weight}}" class="btn btn-outline-danger btn-sm">
                     <i class="fas fa-credit-card"></i> Buy now
                 </a>
             </div>
