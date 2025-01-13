@@ -148,7 +148,9 @@ def delete_pro(req,pid):
     data.delete()
     return redirect(shop_home)
 
-
+def bookings(req):
+    booking=Buy.objects.all()[::-1]
+    return render(req,'shop/bookings.html',{'bookings':booking})
 
 # -----------------user---------------------------------------------
 
