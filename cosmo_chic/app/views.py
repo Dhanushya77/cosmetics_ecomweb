@@ -111,7 +111,7 @@ def details(req):
     else:
         data=product.objects.all()
         return render(req,'shop/details.html',{'data':data})
-    
+
     
 def edit_pro(req, id):
     if req.method == 'POST':
@@ -397,6 +397,6 @@ def filter_products(req):
 
 def view_filtered(req,id):
     category = Category.objects.get(pk=id)
-    details = Details.objects.filter(product__category=category)
-    return render(req, 'user/filter.html', {'category': category,'details': details})
+    pro = product.objects.filter(category=category)
+    return render(req, 'user/filter.html', {'category': category,'pro': pro})
    

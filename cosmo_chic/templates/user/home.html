@@ -111,37 +111,37 @@
     <div class="container mt-5">
         <div class="row g-1">
             <div class="col-md-2">
-                <a href="view_products/{{1}}" style="text-decoration: none;">
+                <a href="view_filtered/{{1}}" style="text-decoration: none;">
                 <img src="../../static/img/makeup.jpeg" alt="makeup" height="200" width="200" style="border-radius: 10%;">
                 <p style="text-align: center; color:brown;">Makeup</p>
                 </a>
             </div>
             <div class="col-md-2">
-                <a href="view_products/{{2}}" style="text-decoration: none;">
+                <a href="view_filtered/{{2}}" style="text-decoration: none;">
                 <img src="../../static/img/skincare.jpeg" alt="makeup" height="200" width="200" style="border-radius: 10%;">
                 <p style="text-align: center; color:brown;">Skincare</p>
                 </a>
             </div>
             <div class="col-md-2">
-                <a href="view_products/{{3}}" style="text-decoration: none;">
+                <a href="view_filtered/{{3}}" style="text-decoration: none;">
                 <img src="../../static/img/haircare.jpeg" alt="makeup" height="200" width="200" style="border-radius: 10%;">
                 <p style="text-align: center; color:brown;">Haircare</p>
                 </a>
             </div>
             <div class="col-md-2">
-                <a href="view_products/{{4}}" style="text-decoration: none;">
+                <a href="view_filtered/{{4}}" style="text-decoration: none;">
                 <img src="../../static/img/bodycare.jpeg" alt="makeup" height="200" width="200" style="border-radius: 10%;">
                 <p style="text-align: center; color:brown;">Bodycare</p>
                 </a>
             </div>
             <div class="col-md-2">
-                <a href="view_products/{{5}}" style="text-decoration: none;">
+                <a href="view_filtered/{{5}}" style="text-decoration: none;">
                 <img src="../../static/img/fragrances.jpg" alt="makeup" height="200" width="200" style="border-radius: 10%;">
                 <p style="text-align: center; color:brown;">Fragrances</p>
                 </a>
             </div>
             <div class="col-md-2">
-                <a href="view_products/{{6}}" style="text-decoration: none;">
+                <a href="view_filtered/{{6}}" style="text-decoration: none;">
                 <img src="../../static/img/mens grooming.jpeg" alt="makeup" height="200" width="200" style="border-radius: 10%;">
                 <p style="text-align: center; color:brown;">Men's grooming</p>
                 </a>
@@ -149,7 +149,7 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="container mt-2 mb-2">
         <video width='100%' autoplay muted loop style="border-radius: 10px;">
             <source src="../../static/img/ecom_video.mp4" type='video/mp4'>
             
@@ -166,10 +166,10 @@
                     <div class="card shadow-sm" style="width:80%;margin:auto;height:460px;">
                         <img class="card-img-top" src="{{pro.img.url}}" alt="Card image"
                             style="width:100%; height:250px;">
-                        <div class="card-body text-center">
+                        <div class="card-body text-center fs-6">
                             <h5 class="card-title fw-bold">{{pro.name}}</h5>
                             <p class="card-text text-muted">{{pro.dis}}</p>
-                            <div class="d-flex justify-content-center gap-3" style="margin-top: 6vh;">
+                            <div class="d-flex justify-content-center gap-3" style="margin-top: 3vh;">
                                 <a href="add_to_cart/{{pro.pk}}" class="btn btn-outline-primary btn-sm">
                                     <i class="fas fa-cart-plus"></i> Add to cart
                                 </a>
@@ -182,6 +182,10 @@
             {% endfor %}
         </div>
 
+    </div>
+
+    <div class="footer">
+        
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
