@@ -5,9 +5,19 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
 }
-
+.aa {
+    background-color: #b95666f8;
+    color: white;
+    text-align: center;
+}
+.aa p{
+    margin-top:1vh;
+}
 .navbar {
-    background-color: #b95667; 
+    background-color: #b95666f8;
+    /* background-color:#fcbbcb2f; */
+    /* background: linear-gradient(to bottom right, #f8a5b834, #fcbbcb2f);  */
+    height: 8vh;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -75,3 +85,8 @@ footer {
     margin-right: 8px;
 }
 
+
+.cat:hover{
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}

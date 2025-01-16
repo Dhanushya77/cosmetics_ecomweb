@@ -40,7 +40,11 @@
                             <i class="fas fa-book"></i> Bookings
                         </a>
                     </li>
-                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="../logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -48,7 +52,7 @@
 
     <div class="container d-flex" style="text-align: center;">
         <div class="sub1">
-            <img src="{{ product.img.url }}" alt="image" style="width: 450px;height:500px; padding: 10%; margin-left: 10vw;"><br><br>
+            <img src="{{ product.img.url }}" alt="image" style="width: 450px;height:500px; padding: 10%; margin-left: 14vw;"><br><br>
         </div>
         <div class="sub2" style="width: 450px; margin-top:15vh;text-align: left;margin-left: -4vw;">
             <h5 class="card-title fw-bold">{{ product.name }}</h5><br>
@@ -81,20 +85,18 @@
     </div>
 
     <div class="container main1">
-        <h4>Frequently bought together</h4>
+        <h3 class="text-left mb-4" style="color: brown;">Frequently bought together</h3>
         <div class="row g-4">
             {% for i in data %}
-                <div class="col-md-4" style="width:30%;">
-                    <a style="text-decoration: none; color: black;" href="../view_details/{{ i.product.pk }}">
-                        <div class="card shadow-sm" style="width:60%; margin:auto;height:300px;">
-                            <img class="card-img-top" src="{{ i.product.img.url }}" alt="Card image" style="width:100%; height:150px;">
+                <div class="col-md-3">
+                    <a style="text-decoration: none; color: black;" href="../view_details/{{ i.pk }}">
+                        <div class="card shadow-sm" style="width:80%; margin:auto;height:350px;border-color: rgba(165, 42, 42, 0.507);">
+                            <img class="card-img-top" src="{{ i.img.url }}" alt="Card image" style="width:100%; height:150px;">
                             <div class="card-body text-center" style="font-size: small;">
-                                <h6 class="card-title fw-bold">{{ i.product.name }}</h6>
-                                <p style="color: black;" class="card-text text-muted">
-                                    ₹{{ i.offer_price }} <span style="text-decoration: line-through;color:red;">₹{{ i.price }}</span>
-                                </p>
-                                <div class="d-flex justify-content-center gap-3" style="margin-top: 1vh;">
-                                    <a href="../add_to_cart/{{ i.product.pk }}" class="btn btn-outline-primary btn-sm" style="width: 100%; height: 30px;">
+                                <h6 class="card-title fw-bold">{{ i.name }}</h6>
+                                <p class="card-text text-muted">{{i.dis}}</p>
+                                <div class="d-flex justify-content-center gap-3" style="margin-top: 3vh;">
+                                    <a href="../add_to_cart/{{ i.pk }}" class="btn btn-outline-danger btn-sm" style="width: 100%; height: 30px;">
                                         <i class="fas fa-cart-plus"></i> Add to cart
                                     </a>
                                 </div>

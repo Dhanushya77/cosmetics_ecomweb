@@ -225,7 +225,7 @@ def user_home(req):
 
 
 def view_details(req, id):
-    data=Details.objects.all()
+    data=product.objects.all()
     products = product.objects.filter(pk=id).first()
 
    

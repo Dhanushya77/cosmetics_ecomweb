@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Cart - Cosmo Chic</title>
     {% load static %}
+    <link rel="stylesheet" href="{% static 'cart_style.css' %}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -27,9 +28,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="shop_home">Home</a>
                 </li>
+                
                 <li class="nav-item">
-                    <a class="nav-link" href="category">
-                        <i class="fas fa-list"></i> Categories
+                    <a class="nav-link" href="user_bookings">
+                        <i class="fas fa-book"></i> Bookings
                     </a>
                 </li>
                 <li class="nav-item">
@@ -43,11 +45,11 @@
 </nav>
 
 <div class="container mt-5">
-    <h3 class="text-center text-uppercase mb-4" style="color: #b3374c;">My Cart</h3>
+    <h3 class="text-center mb-4" style="color: #b3374c;">My Cart</h3>
     <div class="row g-4">
         {% for items in cart %}
         <div class="col-md-4 ">
-            <div class="card shadow-sm" style="width:70%; margin:auto; height:490px;">
+            <div class="card shadow-sm" style="width:70%; margin:auto; height:490px; border-color: rgba(165, 42, 42, 0.541);">
                 <img class="card-img-top" src="{{ items.details.product.img.url }}" alt="{{ items.product.name }}" style="width:100%; height:250px;">
                 <div class="card-body text-center">
                     <h5 class="card-title fw-bold">{{ items.details.product.name }}</h5>
