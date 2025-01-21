@@ -15,7 +15,7 @@ urlpatterns = [
     path('edit_pro/<id>',views.edit_pro),
     path('delete_pro/<pid>',views.delete_pro),
     path('bookings',views.bookings),
- 
+    # path('buy_details/<id>',views.buy_details,name='buy_details'),
     
 
 

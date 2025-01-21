@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    {% block content %}
+    <div class="col-6 mx-auto" style="padding: 10%; width: 60%; margin: auto;">
+        <form action="payment" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Name</label>
+                <input type="text" name="name" class="form-control" id="exampleInputEmail1"
+                    aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Amount</label>
+                <input type="number" name="amount" class="form-control" id="exampleInputPassword1">
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">Pay Now</button>
+            </div>
+        </form>
+    </div>
+
+    <form method="POST">
+        <script src="https://checkout.razorpay.com/v1/checkout.js">
+        </script>
+        <script>
+            var options = {
+                key: "{{razorpay_key}}",
+                amount: "{{order.amount}}",
+                currency: "INR",
+                name: "{{order.name}}",
+                description: "Test Transaction",
+                image: "http://example.com/your_logo",
+                order_id: "{{order.provider_order_id}}",
+                callback_url: "{{callback_url}}",
+                redirect: true,
+                prefill: {
+                    "name": "Gaurav Kumar",
+                    "email": "gaurav.Kumar@example.com",
+                    "contact": "9999999999"
+                },
+                notes: {
+                    "address": "Razorpay Corporate Office"
+                },
+                theme: {
+                    "color": "#3399cc"
+                }
+            }
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        </script>
+        <input type="hidden" custom="Hidden Element" name="hidden">
+    </form>
+    {% endblock %}
+</body>
+
+</html>
