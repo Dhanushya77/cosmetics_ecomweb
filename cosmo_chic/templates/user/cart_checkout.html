@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Checkout</title>
+</head>
+<body>
+    <h1>Cart Checkout</h1>
+
+    <h2>Cart Items</h2>
+    <ul>
+        {% for cart_item in cart_items %}
+            <li>
+                <p><strong>Product:</strong> {{ cart_item.details.product.name }}</p>
+                <p><strong>Price:</strong> ₹{{ cart_item.details.offer_price }}</p>
+                <p><strong>Quantity:</strong> {{ cart_item.quantity }}</p>
+                <hr>
+            </li>
+        {% endfor %}
+    </ul>
+    <p><strong>Total:</strong> ₹{{ total_price }}</p>
+
+    <h2>Shipping Information</h2>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <label for="address">Shipping Address:</label><br>
+        <textarea id="address" name="address" rows="3" required></textarea><br><br>
+
+        <label>Payment Method:</label><br>
+        <input type="radio" id="cod" name="payment_method" value="COD" required>
+        <label for="cod">Cash on Delivery</label><br>
+        <input type="radio" id="online" name="payment_method" value="Online" required>
+        <label for="online">Online Payment</label><br><br>
+
+        <button type="submit">Place Order</button>
+    </form>
+
+    <br>
+    <a href="../view_cart">Back to Cart</a>
+</body>
+</html>

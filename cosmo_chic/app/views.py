@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
 import random
-
 # Create your views here.
 
 def cosmetic_login(req):
@@ -207,20 +206,7 @@ def user_home(req):
     else:
         return redirect(cosmetic_login)
 
-# def view_details(req,id):
-#     products = product.objects.filter(pk=id).first()
-#     data=Details.objects.all()
-#     if products:
-#         details = Details.objects.filter(product=products).first()
-        
-#         if details:
-#             return render(req,'user/view_details.html',{'details':details,'data':data})
-#         else:
-            
-#             return render(req,'user/view_details.html', {'message': 'No details available for this product.'})
-#     else:
-        
-#         return render(req, 'user/view_details.html', {'message': 'Product not found.'})
+
 
 
 
@@ -261,18 +247,6 @@ def view_details(req, id):
 
 
 
-# def add_to_cart(req, pid):
-#     products = product.objects.filter(pk=pid).first()
-#     details = Details.objects.get(product=products)
-#     user = User.objects.get(username=req.session['user'])
-#     try:
-#         cart = Cart.objects.get(details=details, user=user)
-#         cart.quantity += 1
-#         cart.save()
-#     except:
-#         data = Cart.objects.create(details=details, user=user, quantity=1)
-#         data.save()
-#     return redirect(view_cart)
 
 def add_to_cart(req, pid):
 
@@ -329,15 +303,8 @@ def quantity_dec(req,cid):
         data.delete()
     return redirect(view_cart)
 
-# def buy_pro(req,pid):
-#     products=product.objects.filter(pk=pid).first()
-#     details=Details.objects.filter(product=products).first()
-#     user=User.objects.get(username=req.session['user'])
-#     quantity=1
-#     price=details.offer_price
-#     buy=Buy.objects.create(details=details,user=user,quantity=quantity,t_price=price)
-#     buy.save()
-#     return redirect(user_bookings)
+
+
 
 
 def buy_pro(req,pid):
@@ -400,3 +367,110 @@ def view_filtered(req,id):
     pro = product.objects.filter(category=category)
     return render(req, 'user/filter.html', {'category': category,'pro': pro})
    
+   
+   
+   
+   
+  
+
+
+
+def buy_now_checkout(request, pid):
+ 
+    user = User.objects.get(username=request.session.get('user'))
+    product_instance = product.objects.filter(pk=pid).first()
+    details = Details.objects.filter(product=product_instance).first()
+
+
+    if not details:
+        messages.error(request, "Product not available.")
+        return redirect('view_details', id=pid)
+
+
+    weight = request.GET.get('weight')
+
+    if request.method == "POST":
+
+        address = request.POST.get('address')
+        payment_method = request.POST.get('payment_method')
+
+    
+        if not address or not payment_method:
+            messages.error(request, "All fields are required.")
+        else:
+          
+            Order.objects.create(
+                name=user.first_name,
+                address=address,
+                payment_method=payment_method,
+                amount=details.offer_price,
+                status="Pending"
+            )
+
+         
+            details.stock -= 1
+            details.save()
+
+         
+            return redirect('payment_page' if payment_method == "Online" else 'order_success_page')
+
+    return render(request, "user/checkout.html", {
+        "product": product_instance,
+        "details": details,
+        "weight": weight
+    })
+
+
+
+def cart_checkout(request):
+
+    user = User.objects.get(username=request.session.get('user'))
+    
+
+    cart_items = Cart.objects.filter(user=user)
+    total_price = sum(item.quantity * item.details.offer_price for item in cart_items)
+
+ 
+    if not cart_items:
+        messages.error(request, "Your cart is empty.")
+        return redirect('view_cart')
+
+
+    if request.method == "POST":
+   
+        address = request.POST.get('address')
+        payment_method = request.POST.get('payment_method')
+
+
+        if not address or not payment_method:
+            messages.error(request, "All fields are required.")
+        else:
+            total_amount = 0
+         
+            for cart in cart_items:
+                product_details = cart.details
+                amount = cart.quantity * product_details.offer_price
+                total_amount += amount
+
+               
+                Order.objects.create(
+                    name=user.first_name,
+                    address=address,
+                    payment_method=payment_method,
+                    amount=amount,
+                    status="Pending"
+                )
+
+              
+                product_details.stock -= cart.quantity
+                product_details.save()
+
+        
+            cart_items.delete()
+
+         
+            return redirect('payment_page' if payment_method == "Online" else 'order_success_page')
+
+    return render(request, "user/cart_checkout.html", {"cart_items": cart_items,"total_price":total_price})
+
+

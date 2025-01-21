@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Now Checkout</title>
+</head>
+<body>
+    <h1>Buy Now Checkout</h1>
+
+    
+    <p> <img src="{{ product.img.url }}" alt="image" style="width: 450px;height:500px;"></p>
+    <p><strong>Name:</strong> {{ product.name }}</p>
+    <p><strong>Price:</strong> ₹{{ details.offer_price }}</p>
+    <p><strong>Stock:</strong> {{ details.stock }}</p>
+    {% if weight %}
+        <p><strong>Weight:</strong> {{ weight }}</p>
+    {% endif %}
+
+    <h2>Shipping Information</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="address">Shipping Address:</label><br>
+        <textarea id="address" name="address" rows="3" required></textarea><br><br>
+
+        <label>Payment Method:</label><br>
+        <input type="radio" id="cod" name="payment_method" value="COD" required>
+        <label for="cod">Cash on Delivery</label><br>
+        <input type="radio" id="online" name="payment_method" value="Online" required>
+        <label for="online">Online Payment</label><br><br>
+
+        <button type="submit">Place Order</button>
+    </form>
+
+    <br>
+    <a href="../view_details">Back to Product Details</a>
+</body>
+</html>

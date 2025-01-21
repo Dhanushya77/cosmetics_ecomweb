@@ -135,3 +135,7 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'dhanushyavs@gmail.com'
 EMAIL_HOST_PASSWORD = 'pwmr uakz ejtq hjio'
+
+
+RAZORPAY_KEY_ID = 'rzp_test_6pbSTOJa9ghWuY'
+RAZORPAY_KEY_SECRET = '1jK6u0IZAxjB5SALaoHXgz0t'

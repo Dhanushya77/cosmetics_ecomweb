@@ -15,7 +15,7 @@ urlpatterns = [
     path('edit_pro/<id>',views.edit_pro),
     path('delete_pro/<pid>',views.delete_pro),
     path('bookings',views.bookings),
-    # path('buy_details/<id>',views.buy_details,name='buy_details'),
+
     
 
 
@@ -35,6 +35,9 @@ urlpatterns = [
     path('user_bookings',views.user_bookings),
     path('cart_buy', views.cart_buy),
     path('view_filtered/<id>',views.view_filtered),
+    path('buy_now_checkout/<pid>', views.buy_now_checkout),
+    path('cart_checkout', views.cart_checkout),
+    
     
 
 ]
