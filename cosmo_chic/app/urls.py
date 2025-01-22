@@ -31,12 +31,14 @@ urlpatterns = [
     path('quantity_inc/<cid>',views.quantity_inc),
     path('quantity_dec/<cid>',views.quantity_dec),
     path('view_details/<id>',views.view_details),
-    path('buy_pro/<pid>',views.buy_pro),
+    # path('buy_pro/<pid>',views.buy_pro),
     path('user_bookings',views.user_bookings),
-    path('cart_buy', views.cart_buy),
+    # path('cart_buy', views.cart_buy),
     path('view_filtered/<id>',views.view_filtered),
     path('buy_now_checkout/<pid>', views.buy_now_checkout),
     path('cart_checkout', views.cart_checkout),
+    path('order_payment',views.order_payment),
+    path('add_address',views.add_address),
     
     
 

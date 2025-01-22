@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container address">
+        <div class="row">
+          <div class="col-lg-7">
+            <h1>Add address </h1>
+            <form action="" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="mb-2">
+                <label for="name" class="form-label">Your full name:</label>
+                <input type="text" class="form-control" placeholder="Enter your name" name="name">
+              </div>
+              <div class="mb-2">
+                <label for="phn" class="form-label">Phone number:</label>
+                <input type="number" class="form-control" placeholder="Enter phone number" name="phn">
+              </div>
+              <div class="mb-2">
+                <label for="house" class="form-label">House/building:</label>
+                <input type="text" class="form-control" name="house" id="" placeholder="Enter your house/building name/no.">
+              </div>
+              <div class="mb-2">
+                <label for="street" class="form-label">Street name:</label>
+                <input type="text" class="form-control" placeholder="Enter street details" name="street">
+              </div>
+              <div class="mb-2">
+                  <label for="pin" class="form-label">PIN :</label>
+                  <input type="number" class="form-control" placeholder="Enter PIN" name="pin">
+              </div>
+              <div class="mb-2">
+                  <label for="state" class="form-label">State :</label>
+                  <input type="text" class="form-control" placeholder="Enter state" name="state">
+              </div>
+              <div class="form-check mb-2">
+              </div>
+              <div>
+                <button type="submit" class="btn btn1">Submit</button>
+              </div>
+            </form>
+          </div>
+</body>
+</html>

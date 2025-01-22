@@ -18,11 +18,24 @@
     {% endif %}
 
     <h2>Shipping Information</h2>
+    <button><a href="../add_address">Add Address</a></button>
+    <div class="col-lg-5">
+        {% for i in data %}
+        <div class="card">
+          <div class="card-body">
+              <h4 class="card-title"> NAME : {{i.name}}</h4>
+              <h5 class="card-text"> HOUSE/BIULDING : {{i.house}}</h5>
+              <h5 class="card-text">STREET : {{i.street}}</h5>
+              <h5 class="card-text">PIN : {{i.pin}}</h5>
+              <h5 class="card-text">STATE : {{i.state}}</h5>
+              <h5 class="card-text">PHONE : {{i.phn}}</h5>
+              <a href="delete_address/{{i.pk}}" class="btn btn-danger">Delete</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     <form method="POST">
         {% csrf_token %}
-        <label for="address">Shipping Address:</label><br>
-        <textarea id="address" name="address" rows="3" required></textarea><br><br>
-
         <label>Payment Method:</label><br>
         <input type="radio" id="cod" name="payment_method" value="COD" required>
         <label for="cod">Cash on Delivery</label><br>
@@ -33,6 +46,6 @@
     </form>
 
     <br>
-    <a href="../view_details">Back to Product Details</a>
+    <a href="../../view_details/{{product.id}}">Back to Product Details</a>
 </body>
 </html>
