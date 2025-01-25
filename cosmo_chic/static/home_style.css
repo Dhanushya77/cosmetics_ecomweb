@@ -15,8 +15,7 @@ body {
 }
 .navbar {
     background-color: #b95666f8;
-    /* background-color:#fcbbcb2f; */
-    /* background: linear-gradient(to bottom right, #f8a5b834, #fcbbcb2f);  */
+
     height: 8vh;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }

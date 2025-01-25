@@ -45,3 +45,59 @@ body{
 .main{
     margin-top: 10vh;
 }
+@media (max-width: 768px) {
+   
+    .container {
+        width: 50% !important;
+        height: auto;
+        margin-top: 10vh;
+        padding: 15px;
+    }
+
+    .input {
+        width: 80% !important;
+    }
+
+    .input1 {
+        width: 80% !important;
+    }
+
+    .main {
+        margin-top: 5vh;
+    }
+
+    .container h1 {
+        font-size: 24px;
+    }
+
+    .sub {
+        width: 80%;
+    }
+}
+
+@media (max-width: 480px) {
+    
+    .container {
+        width: 80% !important;
+        margin-top: 8vh;
+    }
+
+    .input {
+        width: 90% !important;
+    }
+
+    .input1 {
+        width: 90% !important;
+    }
+
+    .container h1 {
+        font-size: 20px;
+    }
+
+    .sub {
+        width: 90%;
+    }
+}
+
+
+

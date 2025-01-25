@@ -37,8 +37,8 @@ urlpatterns = [
     path('view_filtered/<id>',views.view_filtered),
     path('buy_now_checkout/<pid>', views.buy_now_checkout),
     path('cart_checkout', views.cart_checkout),
-    path('order_payment',views.order_payment),
-    path('add_address',views.add_address),
+    path('payment',views.order_payment),
+    
     
     
 

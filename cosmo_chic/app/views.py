@@ -386,7 +386,7 @@ def order_payment(request):
         order.save()
         return render(
             request,
-            "index.html",
+            "user/payment.html",
             {
                 "callback_url": "http://"+"127.0.0.1.8000"+ "razorpay/callback",
                 "razorpay_key": settings.RAZORPAY_KEY_ID,
@@ -427,48 +427,103 @@ def callback(request):
 
 def order_success(req):
     return render(req,'order_success.html')
+# ---------------------------------payment------------------
 
-def add_address(req):
-    if req.method=='POST':
-        user=User.objects.get(username=req.session['user'])
-        name=req.POST['name']
-        phn=req.POST['phn']
-        house=req.POST['house']
-        street=req.POST['street']
-        pin=req.POST['pin']
-        state=req.POST['state']
-        data=Address.objects.create(user=user,name=name,phn=phn,house=house,street=street,pin=pin,state=state)
-        data.save()
-        return redirect(buy_now_checkout)
-    else:
-        return render(req,'user/add_address.html')
 
-def buy_now_checkout(request, pid):
+def buy_now_checkout(req, pid):
  
-    user = User.objects.get(username=request.session.get('user'))
-    product_instance = product.objects.filter(pk=pid).first()
-    details = Details.objects.filter(product=product_instance).first()
+    # user = User.objects.get(username=request.session.get('user'))
+    # product_instance = product.objects.filter(pk=pid).first()
+    # details = Details.objects.filter(product=product_instance).first()
 
 
-    if not details:
-        messages.error(request, "Product not available.")
-        return redirect('view_details', id=pid)
+    # if not details:
+    #     messages.error(request, "Product not available.")
+    #     return redirect('view_details', id=pid)
 
-    if request.method == "POST":
-        payment_method = request.POST.get('payment_method')
+    # if request.method == "POST":
+    #     payment_method = request.POST.get('payment_method')
 
     
-        if not payment_method:
-            messages.error(request, "All fields are required.")
-        else:
+    #     if not payment_method:
+    #         messages.error(request, "All fields are required.")
+    #     else:
 
          
-            return redirect(order_payment if payment_method == "Online" else order_success)
+    #         return redirect(order_payment if payment_method == "Online" else order_success)
 
-    return render(request, "user/checkout.html", {
-        "product": product_instance,
-        "details": details,
+    # return render(request, "user/checkout.html", {
+    #     "product": product_instance,
+    #     "details": details,
+    # })
+
+
+    
+    product_instance = product.objects.filter(pk=pid).first()
+
+    if not product_instance:
+        return redirect('product_not_found')
+
+    details = Details.objects.filter(product=product_instance)
+    selected_weight = req.GET.get('weight')
+
+
+    if selected_weight:
+        selected_detail = details.filter(weight=selected_weight).first()   
+    else:
+        selected_detail = details.first()
+
+    if not selected_detail:
+        return render(req, 'user/view_details.html', {
+            'message': 'No details available for this product with the selected weight.'})
+
+   
+    user = User.objects.get(username=req.session['user'])
+
+  
+    existing_addresses = Address.objects.filter(user=user)
+
+   
+    if req.method == 'POST':
+        
+        address_id = req.POST.get('address')  
+        
+ 
+        if address_id:
+            address = Address.objects.get(id=address_id)
+        else:
+            
+            name = req.POST.get('name')
+            phn = req.POST.get('phn')
+            house = req.POST.get('house')
+            street = req.POST.get('street')
+            pin = req.POST.get('pin')
+            state = req.POST.get('state')
+
+            address = Address.objects.create(
+                user=user, name=name, phn=phn, house=house, 
+                street=street, pin=pin, state=state
+            )
+
+  
+        quantity = 1
+        price = selected_detail.offer_price
+        buy = Buy.objects.create(
+            details=selected_detail, user=user, quantity=quantity, 
+            t_price=price, address=address
+        )
+        buy.save()
+
+      
+        return redirect(order_payment)
+
+ 
+    return render(req, 'user/checkout.html', {
+        'product': product_instance,
+        'details': selected_detail,
+        'addresses': existing_addresses
     })
+
 
 
 def cart_checkout(request):
