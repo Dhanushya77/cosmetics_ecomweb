@@ -10,11 +10,17 @@ body {
     background-color: #b95666f8; 
     height:8vh;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    
 }
 
 .navbar-brand {
-    font-weight: 600;
-    font-size: 1.7rem;
+
+    font-family: "Dancing Script", serif;
+    font-optical-sizing: auto;
+    font-weight: 1200;
+    font-style: normal;
+    font-size: 2rem !important;
+
 }
 
 .navbar-nav .nav-link {
