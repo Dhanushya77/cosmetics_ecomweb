@@ -12,57 +12,35 @@
 
 <body>
     {% block content %}
-
-
-
-
-    
-    <div class="col-6 mx-auto" style="padding: 10%; width: 60%; margin: auto;">
-        <form action="payment" method="POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Name</label>
-                <input type="text" name="name" class="form-control" id="exampleInputEmail1"
-                    aria-describedby="emailHelp">
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Amount</label>
-                <input type="number" name="amount" class="form-control" id="exampleInputPassword1">
-            </div>
-            <div>
-                <button type="submit" class="btn btn-primary">Pay Now</button>
-            </div>
-        </form>
-    </div>
-
+    <h3 class="text-center mb-4" style="color: #b3374c;">Pay securely with Razorpay</h3>
+    <h3>{{price}}</h3>
     <form method="POST">
-        <script src="https://checkout.razorpay.com/v1/checkout.js">
-        </script>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script>
-            var options = {
-                key: "{{razorpay_key}}",
-                amount: "{{order.amount}}",
-                currency: "INR",
-                name: "{{order.name}}",
-                description: "Test Transaction",
-                image: "http://example.com/your_logo",
-                order_id: "{{order.provider_order_id}}",
-                callback_url: "{{callback_url}}",
-                redirect: true,
-                prefill: {
-                    "name": "Gaurav Kumar",
-                    "email": "gaurav.Kumar@example.com",
-                    "contact": "9999999999"
-                },
-                notes: {
-                    "address": "Razorpay Corporate Office"
-                },
-                theme: {
-                    "color": "#3399cc"
-                }
+        var options = {
+            key: "{{razorpay_key}}",
+            amount: "{{order.amount}}",
+            currency: "INR",
+            name: "{{order.name}}",
+            description: "Test Transaction",
+            image: "https://example.com/your_logo",
+            order_id: "{{order.provider_order_id}}",
+            callback_url: "{{callback_url}}",
+            redirect: true,
+            prefill: {
+                "name":"dhanushya",
+                "email":"dhanushya@gmail.com",
+                "contact":"123456789"
+            },
+            notes: {
+                "address": "Razorpay Corporate Office"
+            },
+            theme: {
+                "color": "#3399cc"
             }
-            var rzp1 = new Razorpay(options);
-            rzp1.open();
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
         </script>
         <input type="hidden" custom="Hidden Element" name="hidden">
     </form>

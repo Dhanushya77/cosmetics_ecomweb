@@ -37,9 +37,12 @@ urlpatterns = [
     path('view_filtered/<id>',views.view_filtered),
     path('buy_now_checkout/<pid>', views.buy_now_checkout),
     path('cart_checkout', views.cart_checkout),
-    path('payment',views.order_payment),
-    
-    
-    
+    path('order_payment',views.order_payment,name="orderpayment"),
+    path('callback',views.callback,name="callback"),
+    path('order_payment2',views.order_payment2,name="orderpayment2"),
+    path('callback2',views.callback2,name="callback2"),
+    path('address',views.address),
+    path('delete_address/<pid>',views.delete_address),
+     
 
 ]

@@ -1,115 +1,190 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart Checkout</title>
+    <title>Buy Now Checkout</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #ffeaf1;
+            background-color: #fef2f8;
             margin: 0;
             padding: 0;
         }
 
         .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
+        
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .header {
+            background-color:#b95666f8;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
         }
 
         h1 {
-            color: #e91e63;
-            text-align: center;
+            margin: 0;
         }
 
-        .cart-item {
+        .checkout-section {
+            display: flex;
+            gap: 30px;
+        }
+
+        .checkout-left,
+        .checkout-right {
+            flex: 1;
+        }
+
+        .checkout-left {
+            background-color: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .checkout-left h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .checkout-left .product-item {
             display: flex;
             justify-content: space-between;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-item img {
+            max-width: 60px;
+            max-height: 60px;
             border-radius: 5px;
         }
 
-        .form-group {
+        .product-item .product-details {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .product-item .product-price {
+            font-weight: bold;
+            color: #ff5722;
+            font-size: 18px;
+        }
+
+        .product-item .product-quantity {
+            font-size: 14px;
+            color: #757575;
+        }
+
+        .checkout-right {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkout-right h3 {
+            font-size: 22px;
+            color: #333;
             margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
         }
 
         .form-group label {
             display: block;
+            font-size: 16px;
             font-weight: bold;
-            margin-bottom: 5px;
-            color: #e91e63;
+            color: #333;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 12px;
             font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 8px;
+            color: #333;
         }
 
-        .payment-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .payment-button {
-            padding: 15px 20px;
-            background-color: #e91e63;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            text-transform: uppercase;
-        }
-
-        .payment-button:hover {
-            background-color: #d81b60;
-        }
-
-        .btn-group {
-            text-align: center;
+        .payment-methods {
             margin-top: 20px;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
+        .payment-methods input {
+            margin-right: 10px;
+        }
+
+        .order-summary {
+            margin-top: 20px;
+        }
+
+        .order-summary .total-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff5722;
+        }
+
+        .order-summary button {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background-color:#b95666f8;
             color: white;
-            background-color: #e91e63;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-transform: uppercase;
-            margin: 5px;
+            margin-top: 20px;
         }
 
-        .btn:hover {
-            background-color: #d81b60;
+        .order-summary button:hover {
+            background-color: #1d63b8;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-section {
+                flex-direction: column;
+            }
+
+            .checkout-left,
+            .checkout-right {
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Cart Checkout</h1>
-        <form method="POST">
-            {% csrf_token %}
+        <div class="header">
+            <h1>Checkout</h1>
+        </div>
 
-            <!-- Display cart items -->
-            <h2>Your Cart</h2>
+        <div class="checkout-section">
+            <!-- Left Section (Product Details) -->
+            <div class="checkout-left">
+                <h2>Review Your Order</h2>
+                <div class="product-item">
+                    <h2>Your Cart</h2>
             <div class="cart-items">
                 {% for item in cart_items %}
                 <div class="cart-item">
@@ -125,46 +200,46 @@
                 <p>Your cart is empty.</p>
                 {% endfor %}
             </div>
-
-            <!-- Total Price -->
-            <div class="form-group">
-                <label>Total Price</label>
-                <input type="text" value="₹{{ total_price }}" readonly>
+                </div>
+                
             </div>
 
-            <!-- Address Selection -->
-            <h3>Select Address</h3>
-            <div class="form-group">
-                {% for address in addresses %}
-                <label>
-                    <input type="radio" name="address" value="{{ address.id }}"> 
-                    {{ address.name }} - {{ address.phn }}<br>
-                    {{ address.house }}, {{ address.street }}, {{ address.state }} - {{ address.pin }}
-                </label>
-                <br>
-                {% endfor %}
-            </div>
+            <!-- Right Section (Address and Payment) -->
+            <div class="checkout-right">
+                <h3>Billing Information</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    <!-- Address Selection -->
+                    <div class="form-group">
+                        <label for="address">Select Address</label>
+                        <select name="address" id="address">
+                            {% for address in addresses %}
+                            <option value="{{ address.id }}">{{ address.name }} - {{ address.house }}, {{ address.street }},
+                                {{ address.state }} - {{ address.pin }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mt-2">
+                        <a href="../../../address?returnUrl={{ current_url }}">Add New Address +</a>
+                    </div>
+                    
 
-            <!-- Payment Method -->
-            <h3>Payment Method</h3>
-            <div class="payment-buttons">
-                <label>
-                    <input type="radio" name="payment_method" value="cod" class="payment-radio">
-                    Cash on Delivery
-                </label>
-                <label>
-                    <input type="radio" name="payment_method" value="online" class="payment-radio">
-                    Online Payment
-                </label>
-            </div>
+                    <!-- Payment Method -->
+                    <div class="payment-methods">
+                        <label><input type="radio" name="payment_method" value="cod"> Cash on Delivery</label>
+                        <label><input type="radio" name="payment_method" value="online"> Online Payment</label>
+                    </div>
 
-            <!-- Submit -->
-            <div class="btn-group">
-                <button type="submit" class="btn">Place Order</button>
-                <button type="button" class="btn" onclick="window.history.back()">Cancel</button>
+                    <!-- Order Summary -->
+                    <div class="order-summary">
+                        <div class="total-price">
+                            Total Price: ₹{{details.offer_price}}
+                        </div>
+                        <button type="submit">Place Order</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </body>
-
 </html>
