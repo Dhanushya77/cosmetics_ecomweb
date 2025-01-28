@@ -1,43 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart Checkout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffeaf1;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #e91e63;
+            text-align: center;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #e91e63;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .payment-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .payment-button {
+            padding: 15px 20px;
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .payment-button:hover {
+            background-color: #d81b60;
+        }
+
+        .btn-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #e91e63;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background-color: #d81b60;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Cart Checkout</h1>
+    <div class="container">
+        <h1>Cart Checkout</h1>
+        <form method="POST">
+            {% csrf_token %}
 
-    <h2>Cart Items</h2>
-    <ul>
-        {% for cart_item in cart_items %}
-            <li>
-                <p><strong>Product:</strong> {{ cart_item.details.product.name }}</p>
-                <p><strong>Price:</strong> ₹{{ cart_item.details.offer_price }}</p>
-                <p><strong>Quantity:</strong> {{ cart_item.quantity }}</p>
-                <hr>
-            </li>
-        {% endfor %}
-    </ul>
-    <p><strong>Total:</strong> ₹{{ total_price }}</p>
+            <!-- Display cart items -->
+            <h2>Your Cart</h2>
+            <div class="cart-items">
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <div>
+                        <strong>{{ item.details.product.name }}</strong><br>
+                        {{ item.quantity }} x ₹{{ item.details.offer_price }}
+                    </div>
+                    <div>
+                        {% comment %} ₹{{ item.quantity * item.details.offer_price }} {% endcomment %}
+                    </div>
+                </div>
+                {% empty %}
+                <p>Your cart is empty.</p>
+                {% endfor %}
+            </div>
 
-    <h2>Shipping Information</h2>
-    <form method="POST">
-        {% csrf_token %}
-        
-        <label for="address">Shipping Address:</label><br>
-        <textarea id="address" name="address" rows="3" required></textarea><br><br>
+            <!-- Total Price -->
+            <div class="form-group">
+                <label>Total Price</label>
+                <input type="text" value="₹{{ total_price }}" readonly>
+            </div>
 
-        <label>Payment Method:</label><br>
-        <input type="radio" id="cod" name="payment_method" value="COD" required>
-        <label for="cod">Cash on Delivery</label><br>
-        <input type="radio" id="online" name="payment_method" value="Online" required>
-        <label for="online">Online Payment</label><br><br>
+            <!-- Address Selection -->
+            <h3>Select Address</h3>
+            <div class="form-group">
+                {% for address in addresses %}
+                <label>
+                    <input type="radio" name="address" value="{{ address.id }}"> 
+                    {{ address.name }} - {{ address.phn }}<br>
+                    {{ address.house }}, {{ address.street }}, {{ address.state }} - {{ address.pin }}
+                </label>
+                <br>
+                {% endfor %}
+            </div>
 
-        <button type="submit">Place Order</button>
-    </form>
+            <!-- Payment Method -->
+            <h3>Payment Method</h3>
+            <div class="payment-buttons">
+                <label>
+                    <input type="radio" name="payment_method" value="cod" class="payment-radio">
+                    Cash on Delivery
+                </label>
+                <label>
+                    <input type="radio" name="payment_method" value="online" class="payment-radio">
+                    Online Payment
+                </label>
+            </div>
 
-    <br>
-    <a href="../view_cart">Back to Cart</a>
+            <!-- Submit -->
+            <div class="btn-group">
+                <button type="submit" class="btn">Place Order</button>
+                <button type="button" class="btn" onclick="window.history.back()">Cancel</button>
+            </div>
+        </form>
+    </div>
 </body>
+
 </html>
