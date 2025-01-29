@@ -321,61 +321,83 @@ def view_filtered(req,id):
    
 
 # ---------------------------------payment------------------------ 
+
 def order_payment(request):
-    if request.method == 'POST':
+    if 'user' in request.session and 'selected_product' in request.session:
         user = User.objects.get(username=request.session['user'])
         name = user.first_name
-        data=Details.objects.get(pk=request.session['detail'])
-        amount = data.offer_price
-        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID,settings.RAZORPAY_KEY_SECRET))
+        product_data = request.session['selected_product']
+        
+       
+        product_id = product_data['product_id']
+        product_name = product_data['product_name']
+        amount = product_data['price']
+        selected_weight = product_data['weight']
+        address_id = product_data['address_id']
+        payment_method = product_data['payment_method']
+        
+       
+        address = Address.objects.get(id=address_id)
+
+        
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
         razorpay_order = client.order.create(
-            {"amount": int(amount) * 100, "currency":"INR", "payment_capture":"1"}
+            {"amount": int(amount) * 100, "currency": "INR", "payment_capture": "1"}
         )
         order_id = razorpay_order['id']
+        
+        
         order = Order.objects.create(
-            name = name, amount = amount, provider_order_id = order_id
+            name=name, amount=amount, provider_order_id=order_id
         )
         order.save()
+
+    
+        print(f"Order Created: {order_id}, Amount: {amount}")
+
+       
         return render(
             request,
-            "user/payment.html",
+            "user/payment.html",  
             {
-                "callback_url": "http://"+"127.0.0.1.8000"+ "razorpay/callback",
+                "callback_url": "http://127.0.0.1:8000/razorpay/callback",
                 "razorpay_key": settings.RAZORPAY_KEY_ID,
-                "order":order,
+                "order": order,
             },
         )
-    return render(request,"user/payment.html")
+    else:
+        return render(request, 'user/login.html') 
+
+
 
 @csrf_exempt
 def callback(request):
     def verify_signature(response_data):
-        client =  razorpay.Client(auth=(settings.RAZORPAY_KEY_ID,settings.RAZORPAY_KEY_SECRET))
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
         return client.utility.verify_payment_signature(response_data)
+
     if "razorpay_signature" in request.POST:
-        payment_id = request.POST.get("razorpay_payment_id","")
-        provider_order_id = request.POST.get("razorpay_order_id","")
-        signature_id = request.POST.get("razorpay_signature","")
+        payment_id = request.POST.get("razorpay_payment_id", "")
+        provider_order_id = request.POST.get("razorpay_order_id", "")
+        signature_id = request.POST.get("razorpay_signature", "")
         order = Order.objects.get(provider_order_id=provider_order_id)
         order.payment_id = payment_id
         order.signature_id = signature_id
         order.save()
+
         if not verify_signature(request.POST):
             order.status = PaymentStatus.SUCCESS
             order.save()
-            return render(request,"callback.html",context={"status":order.status})
         else:
             order.status = PaymentStatus.FAILURE
             order.save()
-            return render(request,"callback.html",context={"status":order.status})
-    else:
-        payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")
-        provider_order_id = json.loads(request.POST.get("error[metadata]")).get("order_id")
-        order = Order.objects.get(provider_order_id=provider_order_id)
-        order.payment_id = payment_id
-        order.status = PaymentStatus.FAILURE
-        order.save()
-        return render(request,"callback.html", context={"status":order.status})
+
+       
+        if 'selected_product' in request.session:
+            del request.session['selected_product']
+
+        return render(request, "callback.html", context={"status": order.status})
+
 
 def order_payment2(req):
     if 'user' in req.session:
@@ -391,6 +413,7 @@ def order_payment2(req):
         order = Order.objects.create(
             name=name, amount=amount, provider_order_id=order_id
         )
+
         order.save()
         return render(
             req,
@@ -402,7 +425,7 @@ def order_payment2(req):
             },
         )
     else:
-        return render(req,"user/payment.html")
+        return render(cosmetic_login)
 
 @csrf_exempt
 def callback2(request):
@@ -426,7 +449,7 @@ def callback2(request):
         else:
             order.status = PaymentStatus.FAILURE
             order.save()
-            return redirect("buyproduct")
+            return render(request, "callback.html", context={"status": order.status}) 
 
     else:
         payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")
@@ -441,20 +464,15 @@ def callback2(request):
 
 
 # ---------------------------------payment------------------
-
-
 def buy_now_checkout(req, pid):
-
     product_instance = product.objects.filter(pk=pid).first()
     current_url = req.build_absolute_uri()
-    print(current_url)
 
     if not product_instance:
         return redirect('product_not_found')
 
     details = Details.objects.filter(product=product_instance)
     selected_weight = req.GET.get('weight')
-
 
     if selected_weight:
         selected_detail = details.filter(weight=selected_weight).first()   
@@ -465,20 +483,17 @@ def buy_now_checkout(req, pid):
         return render(req, 'user/view_details.html', {
             'message': 'No details available for this product with the selected weight.'})
 
-   
     user = User.objects.get(username=req.session['user'])
-
-  
     existing_addresses = Address.objects.filter(user=user)
 
-   
     if req.method == 'POST':
-        address_id = req.POST.get('address')  
+        address_id = req.POST.get('address') 
+        payment_method = req.POST.get('payment_method')
 
+        # Create or fetch address
         if address_id:
             address = Address.objects.get(id=address_id)
         else:
-            
             name = req.POST.get('name')
             phn = req.POST.get('phn')
             house = req.POST.get('house')
@@ -491,24 +506,42 @@ def buy_now_checkout(req, pid):
                 street=street, pin=pin, state=state
             )
 
-  
+        # Store product and address details in session
+        req.session['selected_product'] = {
+            'product_id': product_instance.id,
+            'product_name': product_instance.name,
+            'price': selected_detail.offer_price,
+            'weight': selected_weight,
+            'address_id': address.id,
+            'payment_method': payment_method
+        }
+
         quantity = 1
-        price = selected_detail.offer_price
-        buy = Buy.objects.create(
-            details=selected_detail, user=user, quantity=quantity, 
-            t_price=price, address=address
-        )
-        buy.save()
+        if selected_detail.stock > 0:
+            selected_detail.stock -= quantity
+            selected_detail.save()  
 
-      
-        return redirect(order_payment)
+            price = selected_detail.offer_price
+            buy = Buy.objects.create(
+                details=selected_detail, user=user, quantity=quantity, 
+                t_price=price, address=address
+            )
+            buy.save()
 
- 
+            if payment_method == "online":
+                return redirect('order_payment')  # Redirect to the payment page
+            else:
+                return redirect(user_bookings)  # Redirect to user bookings for COD
+
+        else:
+            return render(req, 'user/view_details.html', {
+                'message': 'Sorry, this product is out of stock.'})
+
     return render(req, 'user/checkout.html', {
         'product': product_instance,
         'details': selected_detail,
         'addresses': existing_addresses,
-        'current_url':current_url,
+        'current_url': current_url,
     })
 
 
@@ -516,6 +549,7 @@ def buy_now_checkout(req, pid):
 def cart_checkout(request):
 
     user = User.objects.get(username=request.session.get('user'))
+    existing_addresses = Address.objects.filter(user=user)
 
     cart_items = Cart.objects.filter(user=user)
     total_price = sum(item.quantity * item.details.offer_price for item in cart_items)
@@ -528,14 +562,26 @@ def cart_checkout(request):
 
     if request.method == "POST":
    
-        address = request.POST.get('address')
+        address_id = request.POST.get('address')
         payment_method = request.POST.get('payment_method')
+        print(payment_method)
 
 
-        if not address or not payment_method:
-            messages.error(request, "All fields are required.")
+        if address_id :
+            address_id = Address.objects.get(id=address_id)
         else:
-            total_amount = 0
+            
+            name = request.POST.get('name')
+            phn = request.POST.get('phn')
+            house = request.POST.get('house')
+            street = request.POST.get('street')
+            pin = request.POST.get('pin')
+            state = request.POST.get('state')
+
+            address = Address.objects.create(
+                user=user, name=name, phn=phn, house=house, 
+                street=street, pin=pin, state=state
+            )
          
             for cart in cart_items:
                 product_details = cart.details
@@ -559,9 +605,13 @@ def cart_checkout(request):
             cart_items.delete()
 
          
-            return redirect(order_payment2 if payment_method == "Online" else user_bookings)
+            if payment_method == "online":
+                return redirect('order_payment2')  
+            else:
+                return redirect(user_bookings)  
 
-    return render(request, "user/cart_checkout.html", {"cart_items": cart_items,"total_price":total_price})
+
+    return render(request, "user/cart_checkout.html", {"cart_items": cart_items,"total_price":total_price,'addresses':existing_addresses})
 
 
 
@@ -729,3 +779,9 @@ def cart_buy(req):
     else:
         return redirect(cosmetic_login) 
     
+
+
+    
+'''quantity decrement stock etc
+payment issue
+styling'''

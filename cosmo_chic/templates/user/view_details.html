@@ -61,6 +61,7 @@
         <div class="sub2" style="width: 450px; margin-top:15vh;text-align: left;margin-left: -4vw;">
             <h5 class="card-title fw-bold">{{ product.name }}</h5><br>
             <p class="card-text text-muted">{{ product.dis }}</p>
+            
 
          
             <div class="weight-options" id="selected_weight" name="selected_weight">
@@ -74,6 +75,7 @@
 
            
             <div id="selected_weight" name="selected_weight" style="margin-top: 20px;">
+                <p class="card-text">Only <span style="color: red;">{{selected_detail.stock}}</span> left</p>
                 <p id="priceDisplay"><strong>Price: ₹{{ selected_detail.offer_price }}</strong> <span style="text-decoration: line-through;color: red;">₹{{ selected_detail.price }}</span></p>
             </div>
 
