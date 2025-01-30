@@ -71,7 +71,11 @@
                             {% endfor %}
                         </ul>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="viewWishlist">
+                            <i class="fas fa-tag"></i> Wishlist
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="view_cart">
                             <i class="fas fa-shopping-cart"></i> Cart
@@ -210,7 +214,7 @@
                                 <a href="add_to_cart/{{pro.pk}}" class="btn btn-outline-danger btn-sm">
                                     <i class="fas fa-cart-plus"></i> Add to cart
                                 </a>
-                                <a href=""><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-bookmark" viewBox="0 0 16 16">
+                                <a href="addWishlist/{{pro.pk}}"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-bookmark" viewBox="0 0 16 16">
                                     <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
                                   </svg></a>
                             </div>

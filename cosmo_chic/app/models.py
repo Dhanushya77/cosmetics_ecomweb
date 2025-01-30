@@ -25,6 +25,11 @@ class Details(models.Model):
 class Otp(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     otp=models.TextField()
+
+class Wishlist(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    pro=models.ForeignKey(product,on_delete=models.CASCADE)
+
     
 class Cart(models.Model):
     details=models.ForeignKey(Details,on_delete=models.CASCADE)

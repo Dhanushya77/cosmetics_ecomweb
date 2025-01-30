@@ -27,13 +27,10 @@ urlpatterns = [
     path('user_home',views.user_home),
     path('add_to_cart/<pid>',views.add_to_cart),
     path('view_cart',views.view_cart),
-    # path('remove_item/<id>',views.remove_item),
     path('quantity_inc/<cid>',views.quantity_inc),
     path('quantity_dec/<cid>',views.quantity_dec),
     path('view_details/<id>',views.view_details),
-    # path('buy_pro/<pid>',views.buy_pro),
     path('user_bookings',views.user_bookings),
-    # path('cart_buy', views.cart_buy),
     path('view_filtered/<id>',views.view_filtered),
     path('buy_now_checkout/<pid>', views.buy_now_checkout),
     path('cart_checkout', views.cart_checkout),
@@ -43,6 +40,9 @@ urlpatterns = [
     path('callback2',views.callback2,name="callback2"),
     path('address',views.address),
     path('delete_address/<pid>',views.delete_address),
-     
+    path('addWishlist/<pid>',views.addWishlist),
+    path('viewWishlist',views.viewWishlist),
+    path('deleteWishlist/<pid>',views.deleteWishlist),
+  
 
 ]

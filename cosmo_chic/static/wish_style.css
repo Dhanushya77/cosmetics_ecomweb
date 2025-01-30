@@ -1,0 +1,61 @@
+
+/* Main content area */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+/* Wishlist items */
+.wishlist-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.wishlist-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 200px;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+}
+
+.wishlist-item img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.product-details h3 {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.product-details p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Button styling */
+.delete-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.delete-btn:hover {
+    background-color: #cc0000;
+}
+
+

@@ -11,6 +11,8 @@ from django.http import JsonResponse
 import razorpay 
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ValidationError
+import re
 # Create your views here.
 
 def cosmetic_login(req):
@@ -157,26 +159,45 @@ def bookings(req):
 # -----------------user---------------------------------------------
 
 def register(req):
-    if req.method=='POST':
-        uname=req.POST['uname']
-        email=req.POST['email']
-        pswrd=req.POST['pswrd']
+    if req.method == 'POST':
+        uname = req.POST['uname']
+        email = req.POST['email']
+        pswrd = req.POST['pswrd']
+
+        # Password validation
+        if len(pswrd) < 8:
+            messages.warning(req, 'Password must be at least 8 characters long.')
+            return redirect(register)
+
+        if not re.search(r'[A-Z]', pswrd):  # Check for uppercase letter
+            messages.warning(req, 'Password must contain at least one uppercase letter.')
+            return redirect(register)
+
+        if not re.search(r'[0-9]', pswrd):  # Check for number
+            messages.warning(req, 'Password must contain at least one number.')
+            return redirect(register)
+
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', pswrd):  # Check for special character
+            messages.warning(req, 'Password must contain at least one special character.')
+            return redirect(register)
+
         try:
-            data=User.objects.create_user(first_name=uname,email=email,username=email,password=pswrd)
+            data = User.objects.create_user(first_name=uname, email=email, username=email, password=pswrd)
             data.save()
-            otp=""
+            otp = ""
             for i in range(6):
-                otp+=str(random.randint(0,9))
-            msg=f'Your registration is completed otp: {otp}'
-            otp=Otp.objects.create(user=data,otp=otp)
+                otp += str(random.randint(0, 9))
+            msg = f'Your registration is completed otp: {otp}'
+            otp = Otp.objects.create(user=data, otp=otp)
             otp.save()
-            send_mail('Registration',msg, settings.EMAIL_HOST_USER, [email])
+            send_mail('Registration', msg, settings.EMAIL_HOST_USER, [email])
             return redirect(otp_confirmation)
         except:
-            messages.warning(req,'Email already exist')
+            messages.warning(req, 'Email already exists')
             return redirect(register)
     else:
-        return render(req,'user/register.html')
+        return render(req, 'user/register.html')
+
     
 def otp_confirmation(req):
     if req.method == 'POST':
@@ -318,7 +339,37 @@ def view_filtered(req,id):
     pro = product.objects.filter(category=category)
     return render(req, 'user/filter.html', {'category': category,'pro': pro})
    
-   
+def addWishlist(req,pid):
+    if 'user' in req.session:
+        prod=product.objects.get(pk=pid)
+        user=User.objects.get(username=req.session['user'])
+        try:
+            data=Wishlist.objects.get(user=user,pro=prod)
+            if data:
+                return redirect(viewWishlist)
+        except:
+            data=Wishlist.objects.create(user=user,pro=prod)
+            data.save()
+        return redirect(viewWishlist)
+    else:
+        return redirect(cosmetic_login)  
+
+def viewWishlist(req):
+    if 'user' in req.session:
+        user=User.objects.get(username=req.session['user'])
+        data=Wishlist.objects.filter(user=user)
+        cat=Category.objects.all()
+        return render(req,'user/wishlist.html',{'data':data,'cat':cat})
+    else:
+        return redirect(cosmetic_login) 
+
+def deleteWishlist(req,pid):
+    if 'user' in req.session:
+        data=Wishlist.objects.get(pk=pid)
+        data.delete()
+        return redirect(viewWishlist)
+    else:
+        return redirect(cosmetic_login) 
 
 # ---------------------------------payment------------------------ 
 
