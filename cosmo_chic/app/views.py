@@ -164,24 +164,6 @@ def register(req):
         uname = req.POST['uname']
         email = req.POST['email']
         pswrd = req.POST['pswrd']
-
-        # Password validation
-        if len(pswrd) < 8:
-            messages.warning(req, 'Password must be at least 8 characters long.')
-            return redirect(register)
-
-        if not re.search(r'[A-Z]', pswrd):  # Check for uppercase letter
-            messages.warning(req, 'Password must contain at least one uppercase letter.')
-            return redirect(register)
-
-        if not re.search(r'[0-9]', pswrd):  # Check for number
-            messages.warning(req, 'Password must contain at least one number.')
-            return redirect(register)
-
-        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', pswrd):  # Check for special character
-            messages.warning(req, 'Password must contain at least one special character.')
-            return redirect(register)
-
         try:
             data = User.objects.create_user(first_name=uname, email=email, username=email, password=pswrd)
             data.save()
@@ -192,6 +174,7 @@ def register(req):
             otp = Otp.objects.create(user=data, otp=otp)
             otp.save()
             send_mail('Registration', msg, settings.EMAIL_HOST_USER, [email])
+            messages.success(req, "Registration successful. Please check your email for OTP.")
             return redirect(otp_confirmation)
         except:
             messages.warning(req, 'Email already exists')
