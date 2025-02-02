@@ -9,11 +9,56 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
+<style>
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+h3 {
+    color: #b3374c;
+}
+
+.payment-image {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    margin: 20px 0;
+}
+
+.exit-btn-container {
+    text-align: center;
+    padding: 20px;
+    margin-top: 60px;
+}
+
+
+@media (max-width: 768px) {
+    .payment-image {
+        max-width: 100%;
+    }
+
+    .exit-btn-container {
+        margin-top: 20px;
+    }
+}
+
+</style>
 
 <body>
     {% block content %}
     <h3 class="text-center mb-4" style="color: #b3374c;">Pay securely with Razorpay</h3>
-    <h3>{{price}}</h3>
+    <img src="../../static/img/payment.jfif" alt="" width="600" height="400">
+    <div class=" mt-4" >
+        <a href="../../shop_home" class="btn btn-danger">exit</a>
+    </div>
     <form method="POST">
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script>

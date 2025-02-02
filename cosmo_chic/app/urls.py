@@ -12,9 +12,12 @@ urlpatterns = [
     path('view_category',views.view_category),
     path('delete_category/<id>',views.delete_category),
     path('view_products/<id>',views.view_products),
-    path('edit_pro/<id>',views.edit_pro),
+    # path('edit_pro/<id>',views.edit_pro),
     path('delete_pro/<pid>',views.delete_pro),
     path('bookings',views.bookings),
+    path('edit_pro/<int:id>/<str:weight>/', views.edit_pro, name='edit_pro'), 
+ 
+
 
     
 

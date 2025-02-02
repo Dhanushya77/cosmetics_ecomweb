@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,32 +21,41 @@
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="image-upload-container">
-                    <img src="{{product_data.img.url}}" alt="Product Image" class="product-image">
+                    <!-- Display current product image -->
+                    <img src="{{ product_data.img.url }}" alt="Product Image" class="product-image">
                     <input type="file" name="img" class="input3">
                 </div>
                 <div class="product-form-wrapper">
+                    <!-- Product ID -->
                     <div class="col-md-6">
-                        <input type="text" name="pid" class="input3" placeholder="Product ID" required value="{{product_data.pid}}">
+                        <input type="text" name="pid" class="input3" placeholder="Product ID" required value="{{ product_data.pid }}">
                     </div>
+                    <!-- Product Name -->
                     <div class="col-md-6">
-                        <input type="text" name="name" class="input3" placeholder="Product Name" required value="{{product_data.name}}">
+                        <input type="text" name="name" class="input3" placeholder="Product Name" required value="{{ product_data.name }}">
                     </div>
+                    <!-- Product Description -->
                     <div class="col-md-6">
-                        <input type="text" name="dis" class="input3" placeholder="Product Description" required value="{{product_data.dis}}">
+                        <input type="text" name="dis" class="input3" placeholder="Product Description" required value="{{ product_data.dis }}">
                     </div>
+                    <!-- Product Price -->
                     <div class="col-md-6">
-                        <input type="number" name="price" class="input3" placeholder="Price" required value="{{details_data.price}}">
+                        <input type="number" name="price" class="input3" placeholder="Price" required value="{{ details_data.0.price }}">
                     </div>
+                    <!-- Product Offer Price -->
                     <div class="col-md-6">
-                        <input type="number" name="offer_price" class="input3" placeholder="Offer Price" required value="{{details_data.offer_price}}">
+                        <input type="number" name="offer_price" class="input3" placeholder="Offer Price" required value="{{  details_data.0.offer_price }}">
                     </div>
+                    <!-- Product Stock Quantity -->
                     <div class="col-md-6">
-                        <input type="number" name="stock" class="input3" placeholder="Stock Quantity" required value="{{details_data.stock}}">
+                        <input type="number" name="stock" class="input3" placeholder="Stock Quantity" required value="{{ details_data.0.stock }}">
                     </div>
+                    <!-- Product Weight -->
                     <div class="col-md-6">
-                        <input type="text" name="weight" class="input3" placeholder="Product Weight" required value="{{details_data.weight}}">
+                        <input type="text" name="weight" class="input3" placeholder="Product Weight" required value="{{ details_data.0.weight }}">
                     </div>
                 </div>
+                <!-- Submit Button -->
                 <input type="submit" value="Update Product">
             </form>
         </div>
@@ -53,3 +63,4 @@
 </body>
 
 </html>
+

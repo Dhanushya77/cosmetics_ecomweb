@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from.models import *
@@ -117,8 +117,10 @@ def details(req):
         data=product.objects.all()
         return render(req,'shop/details.html',{'data':data})
 
+
+
+def edit_pro(req, id, weight):
     
-def edit_pro(req, id):
     if req.method == 'POST':
         pid = req.POST['pid']
         name = req.POST['name']
@@ -126,25 +128,45 @@ def edit_pro(req, id):
         price = req.POST['price']
         offer_price = req.POST['offer_price']
         stock = req.POST['stock']
-        weight = req.POST['weight']
-        img = req.FILES.get('img')
-        product_data = product.objects.get(pk=id)
-        if img:
-            product.objects.filter(pk=id).update(pid=pid, name=name, dis=dis)
-            data = product.objects.get(pk=id)
-            data.img = img
-            data.save()
-        else:
-            product.objects.filter(pk=id).update(pid=pid, name=name, dis=dis)
-        
-        Details.objects.filter(product=product_data).update(price=price, offer_price=offer_price, stock=stock,weight=weight)
-        return redirect(shop_home)
-    else:
-        product_data = product.objects.get(pk=id)
-        details_data = Details.objects.get(product=product_data)
-        return render(req, 'shop/edit_pro.html', {'product_data': product_data, 'details_data': details_data})
+        new_weight = req.POST['weight']  
+        img = req.FILES.get('img')  
 
     
+        product_data = get_object_or_404(product, pk=id)
+
+    
+        product_data.pid = pid
+        product_data.name = name
+        product_data.dis = dis
+        
+        if img:  
+            product_data.img = img
+        
+        product_data.save()  
+
+        
+        selected_detail = Details.objects.filter(product=product_data, weight=weight).first()
+
+        if selected_detail: 
+            selected_detail.price = price
+            selected_detail.offer_price = offer_price
+            selected_detail.stock = stock
+            selected_detail.weight = new_weight 
+            selected_detail.save()  
+
+        return redirect(shop_home)  
+
+    else:  
+        product_data = get_object_or_404(product, pk=id)
+        details_data = Details.objects.filter(product=product_data, weight=weight)  
+
+        return render(req, 'shop/edit_pro.html', {
+            'product_data': product_data,
+            'details_data': details_data  
+        })
+
+
+
 def delete_pro(req,pid):
     data=product.objects.get(pk=pid)
     file=data.img.url
@@ -535,7 +557,7 @@ def buy_now_checkout(req, pid):
         address_id = req.POST.get('address') 
         payment_method = req.POST.get('payment_method')
 
-        # Create or fetch address
+        
         if address_id:
             address = Address.objects.get(id=address_id)
         else:
@@ -551,7 +573,7 @@ def buy_now_checkout(req, pid):
                 street=street, pin=pin, state=state
             )
 
-        # Store product and address details in session
+       
         req.session['selected_product'] = {
             'product_id': product_instance.id,
             'product_name': product_instance.name,
@@ -574,9 +596,9 @@ def buy_now_checkout(req, pid):
             buy.save()
 
             if payment_method == "online":
-                return redirect('order_payment')  # Redirect to the payment page
+                return redirect('order_payment')  
             else:
-                return redirect(user_bookings)  # Redirect to user bookings for COD
+                return redirect(user_bookings) 
 
         else:
             return render(req, 'user/view_details.html', {
@@ -589,74 +611,6 @@ def buy_now_checkout(req, pid):
         'current_url': current_url,
     })
 
-
-
-# def cart_checkout(request):
-
-#     user = User.objects.get(username=request.session.get('user'))
-#     existing_addresses = Address.objects.filter(user=user)
-
-#     cart_items = Cart.objects.filter(user=user)
-#     total_price = sum(item.quantity * item.details.offer_price for item in cart_items)
-
- 
-#     if not cart_items:
-#         messages.error(request, "Your cart is empty.")
-#         return redirect('view_cart')
-
-
-#     if request.method == "POST":
-   
-#         address_id = request.POST.get('address')
-#         payment_method = request.POST.get('payment_method')
-#         print(payment_method)
-
-
-#         if address_id :
-#             address_id = Address.objects.get(id=address_id)
-#         else:
-            
-#             name = request.POST.get('name')
-#             phn = request.POST.get('phn')
-#             house = request.POST.get('house')
-#             street = request.POST.get('street')
-#             pin = request.POST.get('pin')
-#             state = request.POST.get('state')
-
-#             address = Address.objects.create(
-#                 user=user, name=name, phn=phn, house=house, 
-#                 street=street, pin=pin, state=state
-#             )
-         
-#             for cart in cart_items:
-#                 product_details = cart.details
-#                 amount = cart.quantity * product_details.offer_price
-#                 total_amount += amount
-
-               
-#                 Order.objects.create(
-#                     name=user.first_name,
-#                     address=address,
-#                     payment_method=payment_method,
-#                     amount=amount,
-#                     status="Pending"
-#                 )
-
-              
-#                 product_details.stock -= cart.quantity
-#                 product_details.save()
-
-        
-#             cart_items.delete()
-
-         
-#             if payment_method == "online":
-#                 return redirect('order_payment2')  
-#             else:
-#                 return redirect(user_bookings)  
-
-
-#     return render(request, "user/cart_checkout.html", {"cart_items": cart_items,"total_price":total_price,'addresses':existing_addresses})
 
 
 
@@ -672,10 +626,9 @@ def cart_checkout(req):
     if not cart_items.exists():
         return render(req, 'user/cart.html', {'message': 'Your cart is empty.'})
 
-    # Calculate the total amount for all cart items
+  
     total_amount = sum(cart.quantity * cart.details.offer_price for cart in cart_items)
     
-    # Get existing addresses for the user
     existing_addresses = Address.objects.filter(user=user)
 
     if req.method == 'POST':
@@ -696,22 +649,22 @@ def cart_checkout(req):
                 state=req.POST.get('state')
             )
 
-        # Handle payment method
+   
         if payment_method == "online":
-            # Save the total amount and address id to the session for later use
+            
             req.session['total_amount'] = total_amount
             req.session['address_id'] = address.id
 
-            return redirect('order_payment')  # Redirect to the payment page
+            return redirect('order_payment')  
 
         else:
-            # Create the "Buy" entries and update stock for COD
+           
             for cart in cart_items:
                 selected_detail = cart.details
                 quantity = cart.quantity
 
                 if selected_detail.stock >= quantity:
-                    # Create a Buy instance for each item in the cart
+                  
                     Buy.objects.create(
                         details=selected_detail,
                         user=user,
@@ -720,18 +673,18 @@ def cart_checkout(req):
                         address=address
                     )
 
-                    # Decrease the stock in the Details model
+                   
                     selected_detail.stock -= quantity
                     selected_detail.save()
 
-                    # Remove the item from the cart
+                  
                     cart.delete()
                 else:
                     return render(req, 'user/cart.html', {
                         'message': f'Insufficient stock for {cart.details.product.name}.'
                     })
 
-            return redirect(user_bookings)  # Redirect to user's bookings page
+            return redirect(user_bookings) 
 
     return render(req, 'user/cart_checkout.html', {
         'cart_items': cart_items,
@@ -793,7 +746,3 @@ def delete_address(req, pid):
 
 
 
-    
-'''quantity decrement stock etc
-payment issue
-styling'''
