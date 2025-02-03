@@ -6,7 +6,7 @@ body {
 }
 
 .navbar {
-    background-color: #b3374c; /* Pink shade for navbar */
+    background-color: #b95667; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -16,6 +16,10 @@ body {
     font-weight: 1200;
     font-style: normal;
     font-size: 2rem !important;
+}
+.navbar-toggler-icon {
+  background-color:white!important; 
+  border-radius: 8px;
 }
 
 .navbar .nav-link {

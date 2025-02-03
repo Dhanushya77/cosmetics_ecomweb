@@ -24,7 +24,10 @@ body{
     color: #fff;
     transition: color 0.3s ease;
 }
-
+.navbar-toggler-icon {
+  background-color:white!important; 
+  border-radius: 8px;
+}
 .navbar-nav .nav-link:hover {
     color: #f8a5b8;
     text-decoration: underline;
