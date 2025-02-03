@@ -169,3 +169,129 @@ body {
     color: #f7e1d7;
   }
   
+
+  @media (max-width: 768px) {
+
+    .logo {
+        font-size: 1.5rem !important;
+    }
+
+    .navbar {
+        height: auto;
+        padding: 10px 0;
+    }
+  
+    .navbar-nav .nav-item {
+        margin: 0 10px;
+    }
+
+    .footer {
+        padding: 20px;
+        text-align: center;
+    }
+  
+    .footer .footer-container {
+        display: block;
+        text-align: center;
+    }
+  
+    .footer .footer-logo {
+        margin-bottom: 20px;
+    }
+  
+    .footer .social-icons {
+        justify-content: center;
+        margin-top: 10px;
+    }
+  
+    .footer .footer-links {
+        margin-top: 20px;
+    }
+  
+    .footer-bottom {
+        margin-top: 20px;
+        text-align: center;
+    }
+  
+    .footer-bottom .payment-icons {
+        justify-content: center;
+        margin-top: 10px;
+    }
+  
+  
+    .newsletter .dd {
+        flex-direction: column;
+    }
+  }
+  
+  @media (max-width: 480px) {
+  
+    .logo {
+        font-size: 1.2rem !important;
+    }
+  
+  
+    .navbar-nav .nav-item {
+        margin: 0 5px;
+    }
+  
+ 
+    .footer .footer-links ul {
+        padding-left: 0;
+    }
+  
+    .footer-logo a {
+        font-size: 1.5rem !important;
+    }
+  
+    .footer .footer-container {
+        text-align: center;
+    }
+  
+    .footer .social-icons {
+        justify-content: center;
+        margin-top: 10px;
+    }
+  
+    .footer-bottom .payment-icons img {
+        width: 40px;
+        height: auto;
+    }
+  
+  
+  
+  }
+  
+  
+  @media (max-width: 768px) and (min-width: 481px) {
+  
+    .logo {
+        font-size: 1.4rem !important;
+    }
+  
+    .navbar-nav .nav-item {
+        font-size: 0.9rem !important;
+    }
+  
+  
+  
+    .footer .footer-links ul {
+        padding-left: 10px;
+    }
+  
+    .footer .social-icons {
+        justify-content: center;
+    }
+  
+    .footer .footer-container {
+        text-align: center;
+    }
+  
+    .footer-bottom .payment-icons img {
+        width: 50px;
+        height: auto;
+    }
+  
+   
+  }
+  
