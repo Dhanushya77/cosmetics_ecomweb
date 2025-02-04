@@ -12,10 +12,10 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     
 }
-.navbar-toggler-icon {
+/* .navbar-toggler-icon {
   background-color:white!important; 
   border-radius: 8px;
-}
+} */
 .navbar-brand {
 
     font-family: "Dancing Script", serif;
@@ -48,6 +48,8 @@ body {
   }
   
   .footer-container {
+    width: 80%;
+    margin: auto;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -143,6 +145,8 @@ body {
   }
   
   .footer-bottom {
+    width: 80%;
+    margin: auto;
     margin-top: 40px;
     display: flex;
     justify-content: space-between;
@@ -185,43 +189,8 @@ body {
         margin: 0 10px;
     }
 
-    .footer {
-        padding: 20px;
-        text-align: center;
-    }
-  
-    .footer .footer-container {
-        display: block;
-        text-align: center;
-    }
-  
-    .footer .footer-logo {
-        margin-bottom: 20px;
-    }
-  
-    .footer .social-icons {
-        justify-content: center;
-        margin-top: 10px;
-    }
-  
-    .footer .footer-links {
-        margin-top: 20px;
-    }
-  
-    .footer-bottom {
-        margin-top: 20px;
-        text-align: center;
-    }
-  
-    .footer-bottom .payment-icons {
-        justify-content: center;
-        margin-top: 10px;
-    }
-  
-  
-    .newsletter .dd {
-        flex-direction: column;
-    }
+
+
   }
   
   @media (max-width: 480px) {
@@ -236,29 +205,6 @@ body {
     }
   
  
-    .footer .footer-links ul {
-        padding-left: 0;
-    }
-  
-    .footer-logo a {
-        font-size: 1.5rem !important;
-    }
-  
-    .footer .footer-container {
-        text-align: center;
-    }
-  
-    .footer .social-icons {
-        justify-content: center;
-        margin-top: 10px;
-    }
-  
-    .footer-bottom .payment-icons img {
-        width: 40px;
-        height: auto;
-    }
-  
-  
   
   }
   
@@ -272,26 +218,7 @@ body {
     .navbar-nav .nav-item {
         font-size: 0.9rem !important;
     }
-  
-  
-  
-    .footer .footer-links ul {
-        padding-left: 10px;
-    }
-  
-    .footer .social-icons {
-        justify-content: center;
-    }
-  
-    .footer .footer-container {
-        text-align: center;
-    }
-  
-    .footer-bottom .payment-icons img {
-        width: 50px;
-        height: auto;
-    }
-  
+
    
   }
   

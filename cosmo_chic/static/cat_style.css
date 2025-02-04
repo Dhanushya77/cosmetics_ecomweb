@@ -81,6 +81,8 @@ label {
   }
   
   .footer-container {
+    width: 80%;
+    margin:auto;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -176,6 +178,8 @@ label {
   }
   
   .footer-bottom {
+    width: 80%;
+    margin:auto;
     margin-top: 40px;
     display: flex;
     justify-content: space-between;

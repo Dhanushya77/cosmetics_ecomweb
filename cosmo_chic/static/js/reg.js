@@ -7,11 +7,16 @@ let char = document.getElementById("char")
 
 passwd.addEventListener('input', function () {
     const password = passwd.value
-    len.style.color = password.length >= 8 ? 'green' : 'red'
-    cap.style.color = /[A-Z]/.test(password) ? 'green' : 'red'
-    sml.style.color = /[a-z]/.test(password) ? 'green' : 'red'
-    dig.style.color = /\d/.test(password) ? 'green' : 'red'
-    char.style.color = /[!@#$%&*]/.test(password) ? 'green' : 'red'
+    // len.style.color = password.length >= 8 ? 'green' : 'red'
+    // cap.style.color = /[A-Z]/.test(password) ? 'green' : 'red'
+    // sml.style.color = /[a-z]/.test(password) ? 'green' : 'red'
+    // dig.style.color = /\d/.test(password) ? 'green' : 'red'
+    // char.style.color = /[!@#$%&*]/.test(password) ? 'green' : 'red'
+    len.style.display = password.length >= 8 ? 'none' : 'block'
+    cap.style.display = /[A-Z]/.test(password) ? 'none' : 'block'
+    sml.style.display = /[a-z]/.test(password) ? 'none' : 'block'
+    dig.style.display = /\d/.test(password) ? 'none' : 'block'
+    char.style.display = /[!@#$%&*]/.test(password) ? 'none' : 'block'
 })
 document.getElementById("registerForm").addEventListener('submit', function (event) {
     event.preventDefault();  // Prevent form submission for validation
