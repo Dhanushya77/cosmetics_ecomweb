@@ -36,12 +36,22 @@
                           <i class="fa fa-home"></i>Home
                         </a>
                     </li>
-
                     <li class="nav-item">
-                        <a class="nav-link" href="../../view_cart">
-                            <i class="fas fa-shopping-cart"></i> Cart
-                        </a>
+                      <a class="nav-link" href="../../viewWishlist">
+                        <i class="fas fa-tag"></i> Wishlist
+                      </a>
                     </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="../../view_cart">
+                          <i class="fas fa-shopping-cart"></i> Cart
+                      </a>
+                  </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="../../user_bookings">
+                        <i class="fas fa-book"></i> Bookings
+                      </a>
+                    </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="../../logout">
                             <i class="fas fa-sign-out-alt"></i> Logout
@@ -62,9 +72,9 @@
                 <img src="{{i.details.product.img.url}}" style="height: 200px; width:200px;padding: 10%; " alt="">
                 </div>
                 <div class="sub2" style="width: 450px; margin-top:8vh;text-align: left;">
-                <p>{{i.details.product.name}}</p>
-                <p>Total Price : {{i.t_price}}</p>
-                <p>quantity : {{i.quantity}}</p>
+                <p>{{i.details.product.name}}<br>
+                Total Price : {{i.t_price}}<br>
+                quantity : {{i.quantity}}</p>
                 </div>
             </div>
             {% empty %}

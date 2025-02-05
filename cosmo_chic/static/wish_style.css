@@ -16,7 +16,7 @@ h1 {
 .wishlist-items {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    gap: 30px;
 }
 
 .wishlist-item {

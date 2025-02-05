@@ -254,7 +254,7 @@
                     <!-- Address Selection -->
                     <div class="form-group">
                         <label for="address">Select Address</label>
-                        <select name="address" id="address">
+                        <select name="address" id="address" required>
                             {% for address in addresses %}
                             <option value="{{ address.id }}">{{ address.name }} - {{ address.house }}, {{ address.street }},
                                 {{ address.state }} - {{ address.pin }}</option>
