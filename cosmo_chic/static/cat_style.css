@@ -206,3 +206,48 @@ label {
     color: #f7e1d7;
   }
   
+  @media (max-width: 768px) {
+
+    .logo {
+        font-size: 1.5rem !important;
+    }
+  
+  
+    .navbar {
+        height: auto;
+        padding: 10px 0;
+    }
+  
+    .navbar-nav .nav-item {
+        margin: 0 10px;
+    }
+  
+  } 
+  
+  @media (max-width: 480px) {
+  
+    .logo {
+        font-size: 1.2rem !important;
+    }
+  
+  
+    .navbar-nav .nav-item {
+        margin: 0 5px;
+    }
+
+  }
+  
+  
+  @media (max-width: 768px) and (min-width: 481px) {
+  
+    .logo {
+        font-size: 1.4rem !important;
+    }
+  
+    .navbar-nav .nav-item {
+        font-size: 0.9rem !important;
+    }
+  
+
+  }
+  

@@ -80,6 +80,9 @@ body {
     .navbar .nav-link {
         font-size: 0.9rem;
     }
+    .btn-danger{
+      text-align: center;
+    }
 }
 
 /* Footer Styles */
@@ -92,6 +95,8 @@ body {
   }
   
   .footer-container {
+    width: 80%;
+    margin: auto;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -187,6 +192,8 @@ body {
   }
   
   .footer-bottom {
+    width: 80%;
+    margin: auto;
     margin-top: 40px;
     display: flex;
     justify-content: space-between;
@@ -211,5 +218,96 @@ body {
   .footer-bottom .copyright {
     font-size: 12px;
     color: #f7e1d7;
+  }
+  
+
+  @media (max-width: 768px) {
+
+    .logo {
+        font-size: 1.5rem !important;
+    }
+  
+  
+    .navbar {
+        height: auto;
+        padding: 10px 0;
+    }
+  
+    .navbar-nav .nav-item {
+        margin: 0 10px;
+    }
+  
+  } 
+  
+  @media (max-width: 480px) {
+  
+    .logo {
+        font-size: 1.2rem !important;
+    }
+  
+  
+    .navbar-nav .nav-item {
+        margin: 0 5px;
+    }
+
+  }
+  
+  
+  @media (max-width: 768px) and (min-width: 481px) {
+  
+    .logo {
+        font-size: 1.4rem !important;
+    }
+  
+    .navbar-nav .nav-item {
+        font-size: 0.9rem !important;
+    }
+  
+
+  }
+  
+  
+  
+
+ 
+
+
+
+  @media screen and (max-width: 600px) {
+    .footer-container {
+      flex-direction: row; 
+    
+    }
+  .aa{
+    text-align: left;
+  
+  }
+    .footer-links, .newsletter {
+      
+      margin-bottom: 20px;
+    }
+  
+    .footer-bottom {
+      flex-direction: column; 
+    
+      gap: 10px;
+    }
+  
+    .payment-icons {
+      justify-content: center;
+    }
+  
+    .dd {
+      display: block;
+      align-items: stretch;
+    }
+  
+    .email-input {
+      width: 80%; 
+    }
+  
+    .subscribe-btn {
+      width: 80%; 
+    }
   }
   
