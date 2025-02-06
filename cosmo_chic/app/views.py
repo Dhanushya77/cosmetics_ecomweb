@@ -181,6 +181,8 @@ def bookings(req):
 
 # -----------------user---------------------------------------------
 
+
+
 def register(req):
     if req.method == 'POST':
         uname = req.POST['uname']
@@ -234,7 +236,10 @@ def user_home(req):
         category=Category.objects.all()
         return render(req,'user/home.html',{'product':products,'category':category})
     else:
-        return redirect(cosmetic_login)
+        products = product.objects.all().order_by('id')
+        category=Category.objects.all()
+        return render(req,'user/dummy_home.html',{'product':products,'category':category})
+
 
 
 def view_details(req, id):

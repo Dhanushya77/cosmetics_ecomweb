@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Required</title>
+    <style>
+        /* Container for the login warning message */
+        .login-warning {
+            background-color: red;
+            color: white;
+            padding: 15px;
+            font-size: 16px;
+            text-align: center;
+            position: fixed;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+            display: block; 
+        }
+
+        /* Close button inside the warning */
+        .close-btn {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+
+        /* The checkbox is hidden, but it controls visibility of the warning */
+        #close-warning:checked ~ .login-warning {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hidden checkbox used to toggle the warning message -->
+<input type="checkbox" id="close-warning" style="display:none;">
+
+<!-- Login Required Warning Message -->
+<div class="login-warning">
+    <strong>Warning!</strong> You must be logged in to view this content.
+    <label for="close-warning" class="close-btn">×</label>
+</div>
+
+
+
+</body>
+</html>

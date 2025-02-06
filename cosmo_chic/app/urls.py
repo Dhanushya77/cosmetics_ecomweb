@@ -2,8 +2,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('',views.user_home),
     # --------shop-------------------
-    path('',views.cosmetic_login),
+    path('login',views.cosmetic_login),
     path('logout',views.cosmetic_logout),
     path('shop_home',views.shop_home),
     path('add_pro',views.add_pro),
@@ -15,7 +16,7 @@ urlpatterns = [
     # path('edit_pro/<id>',views.edit_pro),
     path('delete_pro/<pid>',views.delete_pro),
     path('bookings',views.bookings),
-    path('edit_pro/<int:id>/<str:weight>/', views.edit_pro, name='edit_pro'), 
+    path('edit_pro/<int:id>/<str:weight>/', views.edit_pro, name='edit_pro'),
  
 
 
