@@ -39,10 +39,6 @@ body {
 }
 
 
-
-
-
-
 .navbar-nav .nav-link {
   font-size: 1rem;
   font-weight: 500;
@@ -335,7 +331,7 @@ body {
     margin: auto;
 
   }
-
+ 
 }
 
 
@@ -412,27 +408,4 @@ body {
 
 
 
-/* Media Queries for Responsiveness */
-@media (max-width: 1200px) {
-  .category-grid {
-      grid-template-columns: repeat(5, 1fr); 
-  }
-}
 
-@media (max-width: 992px) {
-  .category-grid {
-      grid-template-columns: repeat(3, 1fr); 
-  }
-}
-
-@media (max-width: 768px) {
-  .category-grid {
-      grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 576px) {
-  .category-grid {
-      grid-template-columns: 2,1fr; 
-  }
-}

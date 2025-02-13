@@ -14,6 +14,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 import re
 from django.utils.timezone import now
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 def cosmetic_login(req):
@@ -44,9 +46,12 @@ def cosmetic_login(req):
 
 
 def cosmetic_logout(req):
-    logout(req)
-    req.session.flush()
-    return redirect(cosmetic_login)
+    if 'user' in req.session:
+        logout(req)
+        req.session.flush()
+        return redirect(cosmetic_login)
+    else:
+        return redirect(cosmetic_login)
 
 def shop_home(req):
     if 'shop' in req.session:
@@ -68,10 +73,12 @@ def category(req):
         data=Category.objects.all()
         return render(req,'shop/category.html',{'data':data})
 
+
 def view_category(req):
     category=Category.objects.all()
     return render(req,'shop/view_category.html',{'category':category})
-    
+
+
 def delete_category(req,id):
     data=Category.objects.get(pk=id)
     data.delete()
@@ -229,7 +236,7 @@ def otp_confirmation(req):
             return redirect(otp_confirmation)
     return render(req, 'user/otp.html')
 
-    
+
 def user_home(req):
     if 'user' in req.session:
         products = product.objects.all().order_by('id')
@@ -276,45 +283,51 @@ def view_details(req, id):
             'message': 'Product not found.'
         })
 
-
+ 
 def add_to_cart(req, pid):
+    if 'user' in req.session:
+        product_instance = product.objects.filter(pk=pid).first()
 
-    product_instance = product.objects.filter(pk=pid).first()
+        if not product_instance:
+            return redirect('product_not_found')
+        details = Details.objects.filter(product=product_instance)
+        selected_weight = req.GET.get('weight')
 
-    if not product_instance:
-        return redirect('product_not_found')
-    details = Details.objects.filter(product=product_instance)
-    selected_weight = req.GET.get('weight')
+        if selected_weight:
+            selected_detail = details.filter(weight=selected_weight).first()   
+        else: 
+            selected_detail = details.first()
 
-    if selected_weight:
-        selected_detail = details.filter(weight=selected_weight).first()   
-    else: 
-        selected_detail = details.first()
-
-    if not selected_detail:
-        return render(req, 'user/view_details.html', {
-            'message': 'No details available for this product with the selected weight.'})
-
-    user = User.objects.get(username=req.session['user'])
-
-    try:
+        if not selected_detail:
+            return render(req, 'user/view_details.html', {
+                'message': 'No details available for this product with the selected weight.'})
         
-        cart = Cart.objects.get(details=selected_detail, user=user)
-        cart.quantity += 1
-        cart.save()
-
-    except Cart.DoesNotExist:
+        user = User.objects.get(username=req.session['user'])
         
-        Cart.objects.create(details=selected_detail, user=user, quantity=1)
-    return redirect(view_cart)
-    
 
+        try:
+            
+            cart = Cart.objects.get(details=selected_detail, user=user)
+            cart.quantity += 1
+            cart.save()
 
+        except Cart.DoesNotExist:
+            
+            Cart.objects.create(details=selected_detail, user=user, quantity=1)
+        return redirect(view_cart)
+    else:
+        return redirect(cosmetic_login)
+        
+
+ 
 def view_cart(req):
-    user = User.objects.get(username=req.session['user'])
-    data = Cart.objects.filter(user=user)
-    total_price = sum(item.quantity * item.details.offer_price for item in data)
-    return render(req, 'user/cart.html', {'cart': data,'total_price':total_price})
+    if 'user' in req.session:
+        user = User.objects.get(username=req.session['user'])
+        data = Cart.objects.filter(user=user)
+        total_price = sum(item.quantity * item.details.offer_price for item in data)
+        return render(req, 'user/cart.html', {'cart': data,'total_price':total_price})
+    else:
+        return redirect(cosmetic_login)
 
 
 def quantity_inc(req,cid):
@@ -334,11 +347,14 @@ def quantity_dec(req,cid):
         data.delete()
     return redirect(view_cart)
 
-
+ 
 def user_bookings(req):
-    user=User.objects.get(username=req.session['user'])
-    bookings=Buy.objects.filter(user=user)[::-1]
-    return render(req,'user/user_bookings.html',{'bookings':bookings})
+    if 'user' in req.session:
+        user=User.objects.get(username=req.session['user'])
+        bookings=Buy.objects.filter(user=user)[::-1]
+        return render(req,'user/user_bookings.html',{'bookings':bookings})
+    else:
+        return redirect(cosmetic_login)
 
 
 def filter_products(req):
@@ -349,7 +365,8 @@ def view_filtered(req,id):
     category = Category.objects.get(pk=id)
     pro = product.objects.filter(category=category)
     return render(req, 'user/filter.html', {'category': category,'pro': pro})
-   
+
+ 
 def addWishlist(req,pid):
     if 'user' in req.session:
         prod=product.objects.get(pk=pid)
@@ -365,6 +382,7 @@ def addWishlist(req,pid):
     else:
         return redirect(cosmetic_login)  
 
+ 
 def viewWishlist(req):
     if 'user' in req.session:
         user=User.objects.get(username=req.session['user'])
@@ -372,6 +390,7 @@ def viewWishlist(req):
         return render(req,'user/wishlist.html',{'data':data})
     else:
         return redirect(cosmetic_login) 
+
 
 def deleteWishlist(req,pid):
     if 'user' in req.session:
@@ -537,85 +556,87 @@ def callback2(request):
 
 # ---------------------------------payment------------------
 def buy_now_checkout(req, pid):
-    product_instance = product.objects.filter(pk=pid).first()
-    current_url = req.build_absolute_uri()
+    if 'user' in req.session:
+        product_instance = product.objects.filter(pk=pid).first()
+        current_url = req.build_absolute_uri()
 
-    if not product_instance:
-        return redirect('product_not_found')
+        if not product_instance:
+            return redirect('product_not_found')
 
-    details = Details.objects.filter(product=product_instance)
-    selected_weight = req.GET.get('weight')
+        details = Details.objects.filter(product=product_instance)
+        selected_weight = req.GET.get('weight')
 
-    if selected_weight:
-        selected_detail = details.filter(weight=selected_weight).first()   
-    else:
-        selected_detail = details.first()
+        if selected_weight:
+            selected_detail = details.filter(weight=selected_weight).first()   
+        else:
+            selected_detail = details.first()
 
-    if not selected_detail:
-        return render(req, 'user/view_details.html', {
-            'message': 'No details available for this product with the selected weight.'})
+        if not selected_detail:
+            return render(req, 'user/view_details.html', {
+                'message': 'No details available for this product with the selected weight.'})
 
-    user = User.objects.get(username=req.session['user'])
-    existing_addresses = Address.objects.filter(user=user)
+        user = User.objects.get(username=req.session['user'])
+        existing_addresses = Address.objects.filter(user=user)
 
-    if req.method == 'POST':
-        address_id = req.POST.get('address') 
-        payment_method = req.POST.get('payment_method')
+        if req.method == 'POST':
+            address_id = req.POST.get('address') 
+            payment_method = req.POST.get('payment_method')
+
+            
+            if address_id:
+                address = Address.objects.get(id=address_id)
+            else:
+                name = req.POST.get('name')
+                phn = req.POST.get('phn')
+                house = req.POST.get('house')
+                street = req.POST.get('street')
+                pin = req.POST.get('pin')
+                state = req.POST.get('state')
+
+                address = Address.objects.create(
+                    user=user, name=name, phn=phn, house=house, 
+                    street=street, pin=pin, state=state
+                )
 
         
-        if address_id:
-            address = Address.objects.get(id=address_id)
-        else:
-            name = req.POST.get('name')
-            phn = req.POST.get('phn')
-            house = req.POST.get('house')
-            street = req.POST.get('street')
-            pin = req.POST.get('pin')
-            state = req.POST.get('state')
+            req.session['selected_product'] = {
+                'product_id': product_instance.id,
+                'product_name': product_instance.name,
+                'price': selected_detail.offer_price,
+                'weight': selected_weight,
+                'address_id': address.id,
+                'payment_method': payment_method
+            }
 
-            address = Address.objects.create(
-                user=user, name=name, phn=phn, house=house, 
-                street=street, pin=pin, state=state
-            )
+            quantity = 1
+            if selected_detail.stock > 0:
+                selected_detail.stock -= quantity
+                selected_detail.save()  
 
-       
-        req.session['selected_product'] = {
-            'product_id': product_instance.id,
-            'product_name': product_instance.name,
-            'price': selected_detail.offer_price,
-            'weight': selected_weight,
-            'address_id': address.id,
-            'payment_method': payment_method
-        }
+                price = selected_detail.offer_price
+                buy = Buy.objects.create(
+                    details=selected_detail, user=user, quantity=quantity, 
+                    t_price=price, address=address
+                )
+                buy.save()
 
-        quantity = 1
-        if selected_detail.stock > 0:
-            selected_detail.stock -= quantity
-            selected_detail.save()  
+                if payment_method == "online":
+                    return redirect('order_payment')  
+                else:
+                    return redirect(user_bookings) 
 
-            price = selected_detail.offer_price
-            buy = Buy.objects.create(
-                details=selected_detail, user=user, quantity=quantity, 
-                t_price=price, address=address
-            )
-            buy.save()
-
-            if payment_method == "online":
-                return redirect('order_payment')  
             else:
-                return redirect(user_bookings) 
+                return render(req, 'user/view_details.html', {
+                    'message': 'Sorry, this product is out of stock.'})
 
-        else:
-            return render(req, 'user/view_details.html', {
-                'message': 'Sorry, this product is out of stock.'})
-
-    return render(req, 'user/checkout.html', {
-        'product': product_instance,
-        'details': selected_detail,
-        'addresses': existing_addresses,
-        'current_url': current_url,
-    })
-
+        return render(req, 'user/checkout.html', {
+            'product': product_instance,
+            'details': selected_detail,
+            'addresses': existing_addresses,
+            'current_url': current_url,
+        })
+    else:
+        return redirect(cosmetic_login)
 
 
 
