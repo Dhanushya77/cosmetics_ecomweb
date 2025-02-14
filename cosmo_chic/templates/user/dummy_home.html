@@ -77,17 +77,17 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login">
+                        <a class="nav-link" href="viewWishlist">
                             <i class="fas fa-tag"></i> Wishlist
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login">
+                        <a class="nav-link" href="view_cart">
                             <i class="fas fa-shopping-cart"></i> Cart
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login">
+                        <a class="nav-link" href="user_bookings">
                             <i class="fas fa-book"></i> Bookings
                         </a>
                     </li>
@@ -147,7 +147,7 @@
     </div>
 
     <!-- ----------------------category------------------------------- -->
-    <div class="container mt-5">
+    <div class=" category container mt-5">
         <div class="row g-1 ">
             <div class="col-md-2">
                 <a href="view_filtered/{{1}}" style="text-decoration: none;">
@@ -197,9 +197,10 @@
     <div class="container mt-2 mb-2">
         <video width='100%' autoplay muted loop style="border-radius: 10px;">
             <source src="../../static/img/ecom_video.mp4" type='video/mp4'>
+
         </video>
     </div>
-    
+
 
     <div class="container mt-4">
 
@@ -215,7 +216,7 @@
                             <h6 class="card-title fw-bold">{{pro.name}}</h6>
                             <p class="card-text text-muted">{{pro.dis}}</p>
                             <div class="d-flex justify-content-center gap-4" style="margin-top: 3vh;">
-                                <a href="login" class="btn btn-outline-danger btn-sm">
+                                <a href="add_to_cart/{{pro.pk}}" class="btn btn-outline-danger btn-sm">
                                     <i class="fas fa-cart-plus"></i> Add to cart
                                 </a>
                                 <a href="addWishlist/{{pro.pk}}"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-bookmark" viewBox="0 0 16 16">
@@ -226,7 +227,6 @@
                     </div>
                 </a>
             </div>
-            
             {% endfor %}
         </div>
 
