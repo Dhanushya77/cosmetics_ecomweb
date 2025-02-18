@@ -60,6 +60,7 @@ def shop_home(req):
         details = Details.objects.all()
         return render(req,'shop/home.html',{'details':details,'category':categories,"category_products":category_products})
     else:
+
         return redirect(cosmetic_login)
     
 
@@ -88,8 +89,6 @@ def view_products(req,id):
     category = Category.objects.get(pk=id)
     details = Details.objects.filter(product__category=category)
     return render(req, 'shop/view_products.html', {'category': category,'details': details})
- 
-
     
 def add_pro(req):
     if 'shop' in req.session:
@@ -242,6 +241,11 @@ def user_home(req):
         products = product.objects.all().order_by('id')
         category=Category.objects.all()
         return render(req,'user/home.html',{'product':products,'category':category})
+    # elif 'shop' in req.session:
+    #     categories = Category.objects.all()
+    #     category_products = {category.category: product.objects.filter(category=category) for category in categories}
+    #     details = Details.objects.all()
+    #     return render(req,'shop/home.html',{'details':details,'category':categories,"category_products":category_products})
     else:
         products = product.objects.all().order_by('id')
         category=Category.objects.all()
