@@ -515,87 +515,7 @@ def order_payment2(request):
         return redirect(cosmetic_login)
 
 
-# @csrf_exempt
-# def callback2(request):
 
-#     def verify_signature(response_data):
-#         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-#         return client.utility.verify_payment_signature(response_data)
-
-#     if "razorpay_signature" in request.POST:
-#         payment_id = request.POST.get("razorpay_payment_id", "")
-#         provider_order_id = request.POST.get("razorpay_order_id", "")
-#         signature_id = request.POST.get("razorpay_signature", "")
-
-#         # Verify signature before proceeding
-#         response_data = {
-#             "razorpay_order_id": provider_order_id,
-#             "razorpay_payment_id": payment_id,
-#             "razorpay_signature": signature_id
-#         }
-        
-#         if not verify_signature(response_data):
-#             return JsonResponse({"status": "failure", "message": "Invalid signature, payment not processed"}, status=400)
-
-#         # Now that signature is verified, proceed to update the order
-#         order = Order.objects.get(provider_order_id=provider_order_id)
-#         order.payment_id = payment_id
-#         order.signature_id = signature_id
-        
-#         # Assume the payment is successful after signature verification
-#         order.status = PaymentStatus.SUCCESS
-#         order.save()
-
-
-#         # You can redirect the user to a success page here if necessary
-#         return redirect(user_bookings)
-
-#     else:
-#         # Handle missing or malformed data
-#         return JsonResponse({"status": "failure", "message": "Missing required parameters"}, status=400)
-
-@csrf_exempt
-def callback2(request):
-    print(f"Session data: {request.session.items()}")  # Debugging log
-
-    if 'cart_items' in request.session:
-        cart_items = request.session['cart_items']
-        user = User.objects.get(username=request.session['user'])
-        address_id = request.session.get('address_id')
-        address = Address.objects.get(id=address_id)
-
-        for item in cart_items:
-            product_instance = product.objects.get(id=item['product_id'])
-            selected_detail = Details.objects.get(id=item['detail_id'])
-            quantity = item['quantity']
-            price = item['price']
-
-            if selected_detail.stock >= quantity:
-                # Create entry in Buy model
-                Buy.objects.create(
-                    details=selected_detail,
-                    user=user,
-                    quantity=quantity,
-                    t_price=price * quantity,
-                    address=address
-                )
-
-                # Update stock
-                selected_detail.stock -= quantity
-                selected_detail.save()
-
-                # Optionally delete from cart if payment is successful
-                Cart.objects.filter(user=user, details=selected_detail).delete()
-            else:
-                # Handle out-of-stock case here
-                return JsonResponse({"status": "failure", "message": "Out of stock for some items"}, status=400)
-
-        # Clear the session items after processing
-        del request.session['cart_items']
-
-        return redirect(user_bookings)
-    else:
-        return JsonResponse({"status": "failure", "message": "No cart items found"}, status=400)
 
 
 
@@ -685,85 +605,6 @@ def buy_now_checkout(req, pid):
 
 
 
-
-# def cart_checkout(req):
-#     current_url = req.build_absolute_uri()
-#     if 'user' not in req.session:
-#         return redirect('cosmetic_login')
-
-#     user = User.objects.get(username=req.session['user'])
-#     cart_items = Cart.objects.filter(user=user)
-
-#     if not cart_items.exists():
-#         return render(req, 'user/cart.html', {'message': 'Your cart is empty.'})
-
-  
-#     total_amount = sum(cart.quantity * cart.details.offer_price for cart in cart_items)
-    
-#     existing_addresses = Address.objects.filter(user=user)
-
-#     if req.method == 'POST':
-#         address_id = req.POST.get('address')
-#         payment_method = req.POST.get('payment_method')
-
-        
-#         if address_id:
-#             address = Address.objects.get(id=address_id)
-#         else:
-#             address = Address.objects.create(
-#                 user=user,
-#                 name=req.POST.get('name'),
-#                 phn=req.POST.get('phn'),
-#                 house=req.POST.get('house'),
-#                 street=req.POST.get('street'),
-#                 pin=req.POST.get('pin'),
-#                 state=req.POST.get('state')
-#             )
-
-   
-#         if payment_method == "online":
-            
-#             req.session['total_amount'] = total_amount
-#             req.session['address_id'] = address.id
-
-#             return redirect('order_payment2')  
-
-#         else:
-           
-#             for cart in cart_items:
-#                 selected_detail = cart.details
-#                 quantity = cart.quantity
-
-#                 if selected_detail.stock >= quantity:
-                  
-#                     Buy.objects.create(
-#                         details=selected_detail,
-#                         user=user,
-#                         quantity=quantity,
-#                         t_price=selected_detail.offer_price * quantity,
-#                         address=address
-#                     )
-
-                   
-#                     selected_detail.stock -= quantity
-#                     selected_detail.save()
-
-                  
-#                     cart.delete()
-#                 else:
-#                     return render(req, 'user/cart.html', {
-#                         'message': f'Insufficient stock for {cart.details.product.name}.'
-#                     })
-
-#             return redirect(user_bookings) 
-
-#     return render(req, 'user/cart_checkout.html', {
-#         'cart_items': cart_items,
-#         'total_amount': total_amount,
-#         'addresses': existing_addresses,
-#         'current_url': current_url,
-#     })
-
 def cart_checkout(req):
     current_url = req.build_absolute_uri()
     if 'user' not in req.session:
@@ -796,23 +637,28 @@ def cart_checkout(req):
             )
 
         if payment_method == "online":
-            req.session['total_amount'] = total_amount
-            req.session['address_id'] = address.id
+            
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+            razorpay_order = client.order.create(
+                {"amount": int(total_amount) * 100, "currency": "INR", "payment_capture": "1"}
+            )
 
-            # Save cart items to session (for future handling in the order_payment view)
-            req.session['cart_items'] = [
-                {
-                    'product_id': cart.details.product.id,
-                    'quantity': cart.quantity,
-                    'price': cart.details.offer_price,
-                    'detail_id': cart.details.id
-                }
-                for cart in cart_items
-            ]
-            return redirect('order_payment2')  # Redirect to payment view
+            order = Order.objects.create(
+                name=user.first_name,  
+                amount=total_amount,
+                status=PaymentStatus.PENDING,
+                provider_order_id=razorpay_order['id'],
+                payment_id="",  
+                signature_id=""  
+            )
+
+            
+            req.session['order_id'] = order.id
+
+            return redirect('order_payment2')
 
         else:
-            # Handle offline payment, add all items to the Buy model
+            
             for cart in cart_items:
                 selected_detail = cart.details
                 quantity = cart.quantity
@@ -843,8 +689,73 @@ def cart_checkout(req):
         'addresses': existing_addresses,
         'current_url': current_url,
     })
+    
+@csrf_exempt
+def callback2(request):
+    print(f"Request Data: {request.POST}")  
 
+    
+    order_id = request.POST.get('razorpay_order_id')
+    payment_id = request.POST.get('razorpay_payment_id')
+    signature_id = request.POST.get('razorpay_signature')
 
+    if not order_id or not payment_id or not signature_id:
+        return JsonResponse({"status": "failure", "message": "Invalid payment details"}, status=400)
+
+    try:
+        order = Order.objects.get(provider_order_id=order_id, status=PaymentStatus.PENDING)
+        
+        # Verify Razorpay signature
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        params_dict = {
+            'razorpay_order_id': order.provider_order_id,
+            'razorpay_payment_id': payment_id,
+            'razorpay_signature': signature_id
+        }
+        
+        try:
+            client.utility.verify_payment_signature(params_dict)
+        except razorpay.errors.SignatureVerificationError:
+            return JsonResponse({"status": "failure", "message": "Payment signature verification failed"}, status=400)
+
+       
+        order.payment_id = payment_id
+        order.signature_id = signature_id
+        order.status = PaymentStatus.SUCCESS
+        order.save()
+
+        
+        user = User.objects.get(first_name=order.name)
+        cart_items = Cart.objects.filter(user=user)
+
+        if not cart_items.exists():
+            return JsonResponse({"status": "failure", "message": "Cart is empty or already processed"}, status=400)
+
+        for cart in cart_items:
+            selected_detail = cart.details
+            quantity = cart.quantity
+
+            if selected_detail.stock >= quantity:
+                Buy.objects.create(
+                    details=selected_detail,
+                    user=user,
+                    quantity=quantity,
+                    t_price=selected_detail.offer_price * quantity,
+                    address=Address.objects.filter(user=user).first()  
+                )
+
+                selected_detail.stock -= quantity
+                selected_detail.save()
+            else:
+                return JsonResponse({"status": "failure", "message": f"Out of stock: {selected_detail.product.name}"}, status=400)
+
+       
+        cart_items.delete()
+
+        return redirect(user_bookings)
+
+    except Order.DoesNotExist:
+        return JsonResponse({"status": "failure", "message": "Order not found or already processed"}, status=400)
 
 
 def address(req):
