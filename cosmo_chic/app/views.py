@@ -44,7 +44,26 @@ def cosmetic_login(req):
     
 
 #-----------------admin----------------------------------------
-
+def cosmetic_logout(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            logout(request)
+            return redirect(cosmetic_login) 
+        else:
+            
+            return HttpResponse("""
+                <script type="text/javascript">
+                    var confirmation = confirm('Are you sure you want to log out?');
+                    if (confirmation) {
+                        // Use the URL name for logout here
+                        window.location.href = "user_logout";
+                    } else {
+                        window.location.href = '/';  // Or wherever you want to redirect
+                    }
+                </script>
+            """)
+    else:
+        return redirect(cosmetic_login)
 
 def cosmetic_logout(req):
     

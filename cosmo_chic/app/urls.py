@@ -6,6 +6,7 @@ urlpatterns = [
     # --------shop-------------------
     path('login',views.cosmetic_login),
     path('logout',views.cosmetic_logout),
+    path('user_logout',views.user_logout),
     path('shop_home',views.shop_home),
     path('add_pro',views.add_pro),
     path('details',views.details),
