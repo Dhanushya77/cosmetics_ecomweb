@@ -47,6 +47,7 @@ def cosmetic_login(req):
 
 
 def cosmetic_logout(req):
+    
     if 'user' or 'shop' in req.session:
         logout(req)
         req.session.flush()
@@ -681,7 +682,6 @@ def cart_checkout(req):
 
                     selected_detail.stock -= quantity
                     selected_detail.save()
-
                     cart.delete()
                 else:
                     return render(req, 'user/cart.html', {
