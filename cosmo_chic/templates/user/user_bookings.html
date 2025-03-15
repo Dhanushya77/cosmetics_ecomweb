@@ -62,6 +62,14 @@
             </div>
         </div>
     </nav>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Warning!</strong> {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
 
     <div class="container mt-5">
         <h3 class="text-center text-uppercase mb-4" style="color: #b3374c;">Booking history</h3>
@@ -69,12 +77,25 @@
             {% for i in bookings %}
             <div class="col-lg-4 col-md-6 mb-4 d-flex" style="text-align: center;">
                 <div class="sub1">
-                <img src="{{i.details.product.img.url}}" style="height: 200px; width:200px;padding: 10%; " alt="">
+                <img src="{{i.details.product.img.url}}" style="height: 230px; width:230px;padding: 10%; " alt="">
                 </div>
-                <div class="sub2" style="width: 450px; margin-top:8vh;text-align: left;">
+                <div class="sub2" style="width: 450px; margin-top:3vh;text-align: left;">
                 <p>{{i.details.product.name}}<br>
                 Total Price : {{i.t_price}}<br>
-                quantity : {{i.quantity}}</p>
+                quantity : {{i.quantity}}<br>
+              {{i.date}}</p>
+               
+                <p>
+                  {% if i.status == "PENDING" %}
+                  <a href="cancel-booking/{{i.pk}}" class="btn btn-danger">Cancel</a>
+                  {% elif i.status == "confirmed" %}
+                  <p>Delivery expected to be within {{i.details.product.delivery}} days.</p>
+                  <button class="btn btn-success" disabled>Confirmed</button>
+                  
+              {% else %}
+                  <button class="btn btn-danger" disabled>Declined</button>
+              {% endif %}
+            </p>
                 </div>
             </div>
             {% empty %}

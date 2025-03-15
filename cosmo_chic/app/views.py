@@ -15,6 +15,7 @@ from django.core.exceptions import ValidationError
 import re
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
+import requests
 
 # Create your views here.
 
@@ -97,7 +98,8 @@ def add_pro(req):
             dis = req.POST['dis']
             category = req.POST['category']
             img = req.FILES.get('img')
-            data = product.objects.create(pid=pid,name=name,dis=dis,category=Category.objects.get(category=category),img=img)
+            delivery = req.POST['delivery']
+            data = product.objects.create(pid=pid,name=name,dis=dis,category=Category.objects.get(category=category),img=img,delivery=delivery)
             data.save()
             return redirect(details)
         else:
@@ -130,6 +132,7 @@ def edit_pro(req, id, weight):
         pid = req.POST['pid']
         name = req.POST['name']
         dis = req.POST['dis']
+        delivery = req.POST['delivery']
         price = req.POST['price']
         offer_price = req.POST['offer_price']
         stock = req.POST['stock']
@@ -143,6 +146,7 @@ def edit_pro(req, id, weight):
         product_data.pid = pid
         product_data.name = name
         product_data.dis = dis
+        product_data.delivery = delivery
         
         if img:  
             product_data.img = img
@@ -185,8 +189,6 @@ def bookings(req):
     return render(req,'shop/bookings.html',{'bookings':booking})
 
 # -----------------user---------------------------------------------
-
-
 
 def register(req):
     if req.method == 'POST':
@@ -469,8 +471,12 @@ def callback(request):
         order.save()
 
         if not verify_signature(request.POST):
-            order.status = PaymentStatus.SUCCESS
+            order.status = PaymentStatus.PENDING
             order.save()
+            buy_order = Buy.objects.filter(user__first_name=order.name).last()
+            if buy_order:
+                buy_order.status = "PENDING"
+                buy_order.save()
         else:
             order.status = PaymentStatus.FAILURE
             order.save()
@@ -581,7 +587,7 @@ def buy_now_checkout(req, pid):
                 price = selected_detail.offer_price
                 buy = Buy.objects.create(
                     details=selected_detail, user=user, quantity=quantity, 
-                    t_price=price, address=address
+                    t_price=price, address=address,status='PENDING' 
                 )
                 buy.save()
 
@@ -669,7 +675,8 @@ def cart_checkout(req):
                         user=user,
                         quantity=quantity,
                         t_price=selected_detail.offer_price * quantity,
-                        address=address
+                        address=address,
+                        status='PENDING' 
                     )
 
                     selected_detail.stock -= quantity
@@ -721,7 +728,7 @@ def callback2(request):
        
         order.payment_id = payment_id
         order.signature_id = signature_id
-        order.status = PaymentStatus.SUCCESS
+        order.status = PaymentStatus.PENDING
         order.save()
 
         
@@ -741,7 +748,8 @@ def callback2(request):
                     user=user,
                     quantity=quantity,
                     t_price=selected_detail.offer_price * quantity,
-                    address=Address.objects.filter(user=user).first()  
+                    address=Address.objects.filter(user=user).first() ,
+                    status='PENDING'
                 )
 
                 selected_detail.stock -= quantity
@@ -807,5 +815,67 @@ def delete_address(req, pid):
     else:
         return redirect(cosmetic_login)
 
+
+def confirm_booking(request, booking_id):
+    booking = get_object_or_404(Buy, id=booking_id)
+    
+    if booking.status == 'PENDING':
+        booking.status = 'confirmed'
+        booking.save()
+        
+        
+        send_mail(
+            subject="Booking Confirmed",
+            message=f"Dear {booking.user.first_name},\n\nYour booking of {booking.details.product.name} has been confirmed!\n\nDelivery expected to be within {booking.details.product.delivery} days.\n\nThank you for choosing us.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[booking.user.email],
+            fail_silently=False,
+        )
+
+        messages.success(request, "Booking confirmed successfully!")
+
+    return redirect(bookings) 
+
+
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Buy, id=booking_id, user=request.user)
+
+    if booking.status == 'PENDING':
+      
+        product_detail = booking.details
+        product_detail.stock += booking.quantity
+        product_detail.save()
+
+        booking.delete()
+        
+        messages.success(request, "Booking canceled successfully!")
+    else:
+        messages.error(request, "Confirmed bookings cannot be canceled.")
+
+    return redirect(user_bookings)
+
+def decline_booking(request, booking_id):
+
+    booking = get_object_or_404(Buy, id=booking_id)
+
+    if booking.status == "PENDING":
+        booking.status = "declined"
+        booking.save()
+
+        booking.refresh_from_db()
+        send_mail(
+            subject="Booking Declined",
+            message=f"Dear {booking.user.first_name},\n\nYour booking of {booking.details.product.name} has been declined.\n\nIf you have any questions, please contact us.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[booking.user.email],
+            fail_silently=False,
+        )
+
+        messages.success(request, "Booking declined successfully!")
+    else:
+        messages.error(request, "Only pending bookings can be declined.")
+        
+
+    return redirect(bookings)
 
 

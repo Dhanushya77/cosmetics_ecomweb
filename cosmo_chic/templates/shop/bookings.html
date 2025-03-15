@@ -64,6 +64,14 @@
       </div>
     </div>
   </nav>
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Warning!</strong> {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
 
   <div class="container">
     <h3 class="text-center text-uppercase mb-5 mt-4" style="color: #b3374c;">Bookings</h3>
@@ -74,13 +82,23 @@
         <p style="width:300px;"><b>{{i.details.product.name}}</b><br>
           Total Price : {{i.t_price}}<br>
           Weight: {{i.details.weight}}<br>
-          qty : {{i.quantity}}</p>
+          qty : {{i.quantity}}<br>
+        {{i.date}}</p>
         <p style="width:300px;"><b>User Details:</b><br>
           Name:{{i.user.first_name}}<br>
           Email:{{i.user.email}}<br>
           Phn No:{{i.address.phn}}<br>
           Address: {{i.address.name}}, {{i.address.house}}, {{i.address.street}}, {{i.address.pin}}, {{i.address.state}}<br>
-
+        </p>
+        <p>
+          {% if i.status == "PENDING" %}
+              <a href="confirm-booking/{{i.pk}}" class="btn btn-success">Confirm</a>
+              <a href="decline-booking/{{i.pk}}" class="btn btn-danger">Decline</a>
+          {% elif i.status == "confirmed" %}
+          <button class="btn btn-success" disabled>Confirmed</button>
+          {% else %}
+              <button class="btn btn-danger" disabled>Declined</button>
+          {% endif %}
         </p>
       </div>
       {% endfor %}

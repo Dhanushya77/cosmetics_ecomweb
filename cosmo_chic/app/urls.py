@@ -47,6 +47,9 @@ urlpatterns = [
     path('addWishlist/<pid>',views.addWishlist),
     path('viewWishlist',views.viewWishlist),
     path('deleteWishlist/<pid>',views.deleteWishlist),
+    path('confirm-booking/<int:booking_id>/', views.confirm_booking, name='confirm_booking'),
+    path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
+    path('decline-booking/<int:booking_id>/', views.decline_booking, name='decline-booking'),
   
 
 ]

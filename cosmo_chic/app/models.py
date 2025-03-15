@@ -14,6 +14,7 @@ class product(models.Model):
     name = models.TextField()
     dis = models.TextField()
     img = models.FileField()
+    delivery = models.IntegerField()
 
 class Details(models.Model):
     product = models.ForeignKey(product,on_delete=models.CASCADE)
@@ -46,12 +47,20 @@ class Address(models.Model):
     state=models.TextField()
 
 class Buy(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('canceled', 'Canceled'),
+    ]
     details=models.ForeignKey(Details,on_delete=models.CASCADE)
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     address=models.ForeignKey(Address,on_delete=models.CASCADE)
     quantity=models.IntegerField()
     t_price=models.IntegerField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     date=models.DateField(auto_now_add=True)
+    def __str__(self):
+        return f"Booking {self.id} - {self.status}"
 
 class Order(models.Model):
     name = CharField(_("Customer Name"), max_length=254, blank=False, null=False)
